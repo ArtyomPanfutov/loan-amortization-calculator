@@ -33,6 +33,10 @@ public final class LoanAmortization implements Serializable {
         this.monthlyPayments = monthlyPayments;
     }
 
+    public static LoanAmortizationBuilder builder() {
+        return new LoanAmortizationBuilder();
+    }
+
     /**
      * Builder for LoanAmortization class
      */

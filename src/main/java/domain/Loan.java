@@ -52,6 +52,9 @@ public final class Loan implements Serializable {
     public Integer getTerm() {
         return term;
     }
+    public static LoanBuilder builder() {
+        return new LoanBuilder();
+    }
 
     /**
      * Builder class for Loan
