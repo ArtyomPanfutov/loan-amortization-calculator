@@ -31,31 +31,33 @@ public class LoanCalculator implements Calculator {
         LoanAmortization.LoanAmortizationBuilder builder = LoanAmortization.builder();
         List<MonthlyPayment> payments = new ArrayList<>();
 
-        BigDecimal paymentAmount = loan.getAmount().divide(BigDecimal.valueOf(loan.getTerm()), 15, RoundingMode.HALF_UP);
+        BigDecimal monthInterestRate = loan.getRate()
+                                                .divide(BigDecimal.valueOf(100), 6, RoundingMode.HALF_UP)
+                                                .divide(BigDecimal.valueOf(12), 6, RoundingMode.HALF_UP);
+
+        BigDecimal paymentAmount = loan.getAmount().multiply(
+                ((monthInterestRate.multiply(BigDecimal.ONE.add(monthInterestRate).pow(loan.getTerm())))
+                        .divide((BigDecimal.ONE.add(monthInterestRate).pow(loan.getTerm()).subtract(BigDecimal.ONE)), 6, RoundingMode.HALF_UP)
+                )
+        );
         builder.monthlyPaymentAmount(paymentAmount);
 
         BigDecimal loanBalance = loan.getAmount();
-        BigDecimal interestRate = loan.getRate();//.divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        BigDecimal interestRate = loan.getRate();
 
         for (int i = 0; i < loan.getTerm(); i++) {
-//            BigDecimal interestAmount = loanBalance.multiply( ((interestRate).multiply(BigDecimal.valueOf(30)))
-//                                                                    .divide((BigDecimal.valueOf(100).multiply(BigDecimal.valueOf(366))), 15, RoundingMode.HALF_UP)); // TODO
-            BigDecimal interestAmount = (interestRate
-                                            .divide(BigDecimal.valueOf(100), 15,RoundingMode.HALF_UP)
-                                            .divide(BigDecimal.valueOf(366), 15, RoundingMode.HALF_UP)
-                                            .multiply(BigDecimal.valueOf(31)))
-                                        .multiply(loanBalance);
 
 
+            BigDecimal interestAmount = loanBalance.multiply(monthInterestRate);
             BigDecimal principalAmount = paymentAmount.subtract(interestAmount);
 
             paymentAmount = interestAmount.add(principalAmount);
-            loanBalance = loanBalance.subtract(paymentAmount);
+            loanBalance = loanBalance.subtract(principalAmount);
 
             payments.add(MonthlyPayment.builder()
                             .interestPaymentAmount(interestAmount)
                             .debtPaymentAmount(principalAmount)
-                            .loanBalanceAmount(loanBalance)
+                            .loanBalanceAmount(loanBalance) // TODO
                             .monthNumber(i)
                             .build()
             );
