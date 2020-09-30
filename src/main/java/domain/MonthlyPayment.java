@@ -1,5 +1,6 @@
 package domain;
 
+import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -31,11 +32,18 @@ public final class MonthlyPayment implements Serializable {
      */
     private final BigDecimal interestPaymentAmount;
 
-    public MonthlyPayment(Integer monthNumber, BigDecimal loanBalanceAmount, BigDecimal debtPaymentAmount, BigDecimal interestPaymentAmount) {
+    /**
+     * Payment amount
+     */
+    private final BigDecimal paymentAmount;
+
+    @ConstructorProperties({"monthNumber", "loanBalanceAmount", "debtPaymentAmount", "interestPaymentAmount", "paymentAmount"})
+    public MonthlyPayment(Integer monthNumber, BigDecimal loanBalanceAmount, BigDecimal debtPaymentAmount, BigDecimal interestPaymentAmount, BigDecimal paymentAmount) {
         this.monthNumber = monthNumber;
         this.loanBalanceAmount = loanBalanceAmount;
         this.debtPaymentAmount = debtPaymentAmount;
         this.interestPaymentAmount = interestPaymentAmount;
+        this.paymentAmount = paymentAmount;
     }
 
     /**
@@ -70,7 +78,7 @@ public final class MonthlyPayment implements Serializable {
      * @return Amount of payment
      */
     public BigDecimal getPaymentAmount() {
-        return interestPaymentAmount.add(debtPaymentAmount);
+        return paymentAmount;
     }
 
     public static MonthlyPaymentBuilder builder() {
@@ -84,15 +92,17 @@ public final class MonthlyPayment implements Serializable {
         private BigDecimal loanBalanceAmount;
         private BigDecimal debtPaymentAmount;
         private BigDecimal interestPaymentAmount;
+        private BigDecimal paymentAmount;
 
         public MonthlyPaymentBuilder() {
         }
 
-        public MonthlyPaymentBuilder(Integer monthNumber, BigDecimal loanBalanceAmount, BigDecimal debtPaymentAmount, BigDecimal interestPaymentAmount) {
+        public MonthlyPaymentBuilder(Integer monthNumber, BigDecimal loanBalanceAmount, BigDecimal debtPaymentAmount, BigDecimal interestPaymentAmount, BigDecimal paymentAmount) {
             this.monthNumber = monthNumber;
             this.loanBalanceAmount = loanBalanceAmount;
             this.debtPaymentAmount = debtPaymentAmount;
             this.interestPaymentAmount = interestPaymentAmount;
+            this.paymentAmount = paymentAmount;
         }
 
         public MonthlyPaymentBuilder monthNumber(Integer monthNumber) {
@@ -111,11 +121,16 @@ public final class MonthlyPayment implements Serializable {
             this.interestPaymentAmount = interestPaymentAmount;
             return this;
         }
+        public MonthlyPaymentBuilder paymentAmount(BigDecimal paymentAmount) {
+            this.paymentAmount = paymentAmount;
+            return this;
+        }
 
         public MonthlyPayment build() {
-            return new MonthlyPayment(monthNumber, loanBalanceAmount, debtPaymentAmount, interestPaymentAmount);
+            return new MonthlyPayment(monthNumber, loanBalanceAmount, debtPaymentAmount, interestPaymentAmount, paymentAmount);
         }
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,12 +139,13 @@ public final class MonthlyPayment implements Serializable {
         return Objects.equals(monthNumber, that.monthNumber) &&
                 Objects.equals(loanBalanceAmount, that.loanBalanceAmount) &&
                 Objects.equals(debtPaymentAmount, that.debtPaymentAmount) &&
-                Objects.equals(interestPaymentAmount, that.interestPaymentAmount);
+                Objects.equals(interestPaymentAmount, that.interestPaymentAmount) &&
+                Objects.equals(paymentAmount, that.paymentAmount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(monthNumber, loanBalanceAmount, debtPaymentAmount, interestPaymentAmount);
+        return Objects.hash(monthNumber, loanBalanceAmount, debtPaymentAmount, interestPaymentAmount, paymentAmount);
     }
 
     @Override
@@ -138,7 +154,8 @@ public final class MonthlyPayment implements Serializable {
                 "monthNumber=" + monthNumber +
                 ", loanBalanceAmount=" + loanBalanceAmount +
                 ", debtPaymentAmount=" + debtPaymentAmount +
-                ", percentPaymentAmount=" + interestPaymentAmount +
+                ", interestPaymentAmount=" + interestPaymentAmount +
+                ", paymentAmount=" + paymentAmount +
                 '}';
     }
 }

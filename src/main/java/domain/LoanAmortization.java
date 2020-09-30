@@ -1,5 +1,6 @@
 package domain;
 
+import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
@@ -27,10 +28,27 @@ public final class LoanAmortization implements Serializable {
      */
     private final List<MonthlyPayment> monthlyPayments;
 
+    @ConstructorProperties({"montlyPaymentAmount", "overPaymentAmount", "monthlyPayments"})
     public LoanAmortization(BigDecimal monthlyPaymentAmount, BigDecimal overPaymentAmount, List<MonthlyPayment> monthlyPayments) {
         this.monthlyPaymentAmount = monthlyPaymentAmount;
         this.overPaymentAmount = overPaymentAmount;
         this.monthlyPayments = monthlyPayments;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public BigDecimal getMonthlyPaymentAmount() {
+        return monthlyPaymentAmount;
+    }
+
+    public BigDecimal getOverPaymentAmount() {
+        return overPaymentAmount;
+    }
+
+    public List<MonthlyPayment> getMonthlyPayments() {
+        return monthlyPayments;
     }
 
     public static LoanAmortizationBuilder builder() {

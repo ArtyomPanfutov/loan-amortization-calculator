@@ -1,5 +1,6 @@
 package service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Loan;
 import domain.LoanAmortization;
 import exception.LoanAmortizationCalculatorException;
@@ -7,8 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -24,7 +28,7 @@ public class LoanCalculatorTest {
     }
 
     @Test
-    public void shouldShouldCalculatePayments() {
+    public void shouldShouldCalculatePayments() throws IOException {
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
                 .rate(BigDecimal.valueOf(4.56))
@@ -32,8 +36,12 @@ public class LoanCalculatorTest {
                 .build();
 
         LoanAmortization amortization = calculator.calculate(loan);
-
         assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-500000.32-4.56-32.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
     }
 
 
