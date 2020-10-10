@@ -2,6 +2,7 @@ package domain;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -26,10 +27,16 @@ public final class Loan implements Serializable {
      */
     private final Integer term;
 
-    public Loan(BigDecimal amount, BigDecimal rate, Integer term) {
+    /**
+     * Additional payments
+     */
+    private final List<AdditionalPayment> additionalPayments;
+
+    public Loan(BigDecimal amount, BigDecimal rate, Integer term, List<AdditionalPayment> additionalPayments) {
         this.amount = amount;
         this.rate = rate;
         this.term = term;
+        this.additionalPayments = additionalPayments;
     }
 
     /**
@@ -52,6 +59,14 @@ public final class Loan implements Serializable {
     public Integer getTerm() {
         return term;
     }
+
+    /**
+     * @return Additional payments
+     */
+    public List<AdditionalPayment> getAdditionalPayments() {
+        return additionalPayments;
+    }
+
     public static LoanBuilder builder() {
         return new LoanBuilder();
     }
@@ -64,14 +79,16 @@ public final class Loan implements Serializable {
         private BigDecimal amount;
         private BigDecimal rate;
         private Integer term;
+        private List<AdditionalPayment> additionalPayments;
 
         public LoanBuilder() {
         }
 
-        public LoanBuilder(BigDecimal amount, BigDecimal rate, Integer term) {
+        public LoanBuilder(BigDecimal amount, BigDecimal rate, Integer term, List<AdditionalPayment> additionalPayments) {
             this.amount = amount;
             this.rate = rate;
             this.term = term;
+            this.additionalPayments = additionalPayments;
         }
 
         public LoanBuilder amount(BigDecimal amount) {
@@ -89,8 +106,13 @@ public final class Loan implements Serializable {
             return this;
         }
 
+        public LoanBuilder additionalPayments(List<AdditionalPayment> additionalPayments) {
+            this.additionalPayments = additionalPayments;
+            return this;
+        }
+
         public Loan build() {
-            return new Loan(amount, rate, term);
+            return new Loan(amount, rate, term, additionalPayments);
         }
 
     }

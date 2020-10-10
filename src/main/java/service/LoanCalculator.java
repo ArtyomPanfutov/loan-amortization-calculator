@@ -1,8 +1,6 @@
 package service;
 
-import domain.Loan;
-import domain.LoanAmortization;
-import domain.MonthlyPayment;
+import domain.*;
 import exception.ExceptionType;
 import exception.LoanAmortizationCalculatorException;
 
@@ -11,6 +9,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Loan amortization calculator
@@ -34,26 +33,63 @@ public class LoanCalculator implements Calculator {
                                                 .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
                                                 .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
 
-        BigDecimal paymentAmount = loan.getAmount().multiply(
+        BigDecimal monthlyPaymentAmount = loan.getAmount().multiply(
                                           ((monthlyInterestRate.multiply(BigDecimal.ONE.add(monthlyInterestRate).pow(loan.getTerm())))
                                                   .divide((BigDecimal.ONE.add(monthlyInterestRate).pow(loan.getTerm()).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
                                           )
                                     );
-        builder.monthlyPaymentAmount(paymentAmount);
+        builder.monthlyPaymentAmount(monthlyPaymentAmount);
 
         BigDecimal loanBalance = loan.getAmount();
         BigDecimal overPaidInterestAmount = BigDecimal.ZERO;
 
+        List<AdditionalPayment> additionalPayments = loan.getAdditionalPayments() != null ? loan.getAdditionalPayments() : Collections.EMPTY_LIST;
         for (int i = 0; i < loan.getTerm(); i++) {
             BigDecimal interestAmount = loanBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
+
+            if (interestAmount.compareTo(BigDecimal.ZERO) < 0) {
+                int index = i - 1;
+
+                MonthlyPayment payment = payments.get(index);
+
+                payments.set(index, new MonthlyPayment.MonthlyPaymentBuilder()
+                        .additionalPaymentAmount(payment.getAdditionalPaymentAmount())
+                        .paymentAmount(loanBalance)
+                        .debtPaymentAmount(loanBalance.subtract(payment.getInterestPaymentAmount()))
+                        .interestPaymentAmount(payment.getInterestPaymentAmount())
+                        .loanBalanceAmount(loanBalance.subtract(payment.getInterestPaymentAmount()))
+                        .build());
+
+                break;
+            }
+
             overPaidInterestAmount = overPaidInterestAmount.add(interestAmount);
             BigDecimal principalAmount;
 
+            BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
+            AtomicReference<AdditionalPayment> additionalPayment = new AtomicReference<>();
+
+            final Integer paymentNumber = i;
+            // TODO temporary not optimal
+            additionalPayments.stream()
+                    .filter(payment -> payment.getNumber().equals(paymentNumber))
+                    .findFirst()
+                    .ifPresent(additionalPayment::set);
+
+
+            if (additionalPayment.get() != null) {
+               additionalPaymentAmount = additionalPayment.get().getAmount();
+            }
+
+            BigDecimal paymentAmount;
             if (i + 1 == loan.getTerm()) {
                 principalAmount = loanBalance;
                 paymentAmount = loanBalance;
             } else {
-                principalAmount = paymentAmount.subtract(interestAmount).setScale(2, RoundingMode.HALF_UP);
+                principalAmount = (monthlyPaymentAmount.subtract(interestAmount))
+                                    .add(additionalPaymentAmount)
+                                    .setScale(2, RoundingMode.HALF_UP);
+
                 paymentAmount = interestAmount.add(principalAmount);
             }
 
@@ -63,6 +99,7 @@ public class LoanCalculator implements Calculator {
                             .paymentAmount(paymentAmount)
                             .loanBalanceAmount(loanBalance)
                             .monthNumber(i)
+                            .additionalPaymentAmount(additionalPaymentAmount)
                             .build());
 
             loanBalance = loanBalance.subtract(principalAmount);

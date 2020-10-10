@@ -1,6 +1,8 @@
 package service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.AdditionalPayment;
+import domain.EarlyPaymentType;
 import domain.Loan;
 import domain.LoanAmortization;
 import exception.LoanAmortizationCalculatorException;
@@ -11,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,7 +32,7 @@ public class LoanCalculatorTest {
     }
 
     @Test
-    public void shouldShouldCalculatePayments() throws IOException {
+    public void shouldCalculatePayments() throws IOException {
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
                 .rate(BigDecimal.valueOf(4.56))
@@ -44,6 +48,23 @@ public class LoanCalculatorTest {
         assertEquals(reference, amortization);
     }
 
+    @Test
+    public void shouldCalculateWithAdditionalPayments() {
+        List<AdditionalPayment> additionalPaymentList = new ArrayList<>();
+
+        additionalPaymentList.add(new AdditionalPayment(5, BigDecimal.valueOf(50000), EarlyPaymentType.LOAN_TERM));
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000.32))
+                .rate(BigDecimal.valueOf(4.56))
+                .additionalPayments(additionalPaymentList)
+                .term(32)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+    }
+
 
     @Test
     public void shouldFailWhenLoanIsNull() {
@@ -52,7 +73,7 @@ public class LoanCalculatorTest {
         });
 
         Assertions.assertThrows(LoanAmortizationCalculatorException.class, () ->{
-            calculator.calculate(new Loan(null, null, null));
+            calculator.calculate(new Loan(null, null, null, null));
         });
     }
 }

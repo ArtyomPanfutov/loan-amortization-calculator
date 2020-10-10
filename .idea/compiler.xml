@@ -9,6 +9,6 @@
         <module name="Loan-Amoritzation-Calculator" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="14" />
+    <bytecodeTargetLevel target="8" />
   </component>
 </project>
