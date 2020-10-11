@@ -1,4 +1,4 @@
-package exception;
+package loan.amortization.lib.exception;
 
 public class LoanAmortizationCalculatorException extends RuntimeException {
     private static final long serialVersionUID = -7709387093821627328L;

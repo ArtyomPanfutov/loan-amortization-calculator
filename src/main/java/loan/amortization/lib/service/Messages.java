@@ -1,4 +1,4 @@
-package service;
+package loan.amortization.lib.service;
 
 public enum Messages {
     NULL("Input data can't be null!"),

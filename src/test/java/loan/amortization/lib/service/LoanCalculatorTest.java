@@ -1,8 +1,8 @@
-package service;
+package loan.amortization.lib.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.*;
-import exception.LoanAmortizationCalculatorException;
+import loan.amortization.lib.domain.*;
+import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

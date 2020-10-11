@@ -1,8 +1,10 @@
-package service;
+package loan.amortization.lib.service;
 
-import domain.*;
-import exception.ExceptionType;
-import exception.LoanAmortizationCalculatorException;
+import loan.amortization.lib.domain.*;
+import loan.amortization.lib.exception.ExceptionType;
+import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,6 +16,7 @@ import java.util.*;
  * @author Artyom Panfutov
  */
 public class LoanCalculator implements Calculator {
+    private static final Logger logger = LogManager.getLogger(LoanCalculator.class);
 
     /**
      * Calculate payment
@@ -42,8 +45,8 @@ public class LoanCalculator implements Calculator {
 
         // Calculate payments schedule
         for (int i = 0; i < loan.getTerm(); i++) {
-            BigDecimal principalAmount = BigDecimal.ZERO;
-            BigDecimal paymentAmount = BigDecimal.ZERO;
+            BigDecimal principalAmount;
+            BigDecimal paymentAmount;
             BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
 
             BigDecimal interestAmount = loanBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
@@ -102,11 +105,15 @@ public class LoanCalculator implements Calculator {
             }
         }
 
-        return builder
+        LoanAmortization result = builder
                 .monthlyPayments(Collections.unmodifiableList(payments))
                 .overPaymentAmount(overPaidInterestAmount)
                 .earlyPayments(earlyPayments)
                 .build();
+
+        logger.info("Calculation result: " + result);
+
+        return result;
     }
 
     /**
@@ -117,12 +124,17 @@ public class LoanCalculator implements Calculator {
      * @return
      */
     private BigDecimal getMonthlyPaymentAmount(BigDecimal amount, BigDecimal rate, Integer term) {
-        return  amount
-                    .multiply(((rate
-                                   .multiply(BigDecimal.ONE.add(rate).pow(term))
-                                ).divide((BigDecimal.ONE.add(rate).pow(term).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
-                             )
-                    ).setScale(2, RoundingMode.HALF_UP);
+        logger.info("Calculating monthly payment amount for: {}, {}, {}", amount, rate, term);
+
+        BigDecimal monthlyPaymentAmount = amount
+                .multiply(((rate
+                                .multiply(BigDecimal.ONE.add(rate).pow(term))
+                        ).divide((BigDecimal.ONE.add(rate).pow(term).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
+                        )
+                ).setScale(2, RoundingMode.HALF_UP);
+
+        logger.info("Calculate monthly payment amount: " + amount);
+        return monthlyPaymentAmount;
     }
 
     /**
@@ -132,6 +144,8 @@ public class LoanCalculator implements Calculator {
     // TODO Need to make message more clear about what property is not valid
     //      Also this method is not readable :(
     private void validate(Loan loan) {
+        logger.info("Validating input. Loan: " + loan);
+
         if (loan == null || loan.getAmount() == null || loan.getRate() == null || loan.getTerm() == null) {
             throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.NULL.getMessageText());
         }
@@ -160,6 +174,7 @@ public class LoanCalculator implements Calculator {
                 }
             }
         }
+        logger.info("Successful validation!");
     }
 }
 

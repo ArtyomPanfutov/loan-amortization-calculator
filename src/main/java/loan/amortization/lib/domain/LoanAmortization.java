@@ -1,4 +1,4 @@
-package domain;
+package loan.amortization.lib.domain;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
@@ -157,5 +157,13 @@ public final class LoanAmortization implements Serializable {
         return Objects.hash(monthlyPaymentAmount, overPaymentAmount, monthlyPayments, earlyPayments);
     }
 
-
+    @Override
+    public String toString() {
+        return "LoanAmortization{" +
+                "monthlyPaymentAmount=" + monthlyPaymentAmount +
+                ", overPaymentAmount=" + overPaymentAmount +
+                ", monthlyPayments=" + monthlyPayments +
+                ", earlyPayments=" + earlyPayments +
+                '}';
+    }
 }

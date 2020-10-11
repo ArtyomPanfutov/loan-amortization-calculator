@@ -1,4 +1,4 @@
-package domain;
+package loan.amortization.lib.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
