@@ -21,10 +21,16 @@ public class EarlyPayment implements Serializable {
      */
     private final EarlyPaymentStrategy strategy;
 
-    @ConstructorProperties({"amount", "type"})
-    public EarlyPayment(BigDecimal amount, EarlyPaymentStrategy type) {
+    /**
+     * Repeating strategy
+     */
+    private final EarlyPaymentRepeatingStrategy repeatingStrategy;
+
+    @ConstructorProperties({"amount", "type", "repeatingStrategy"})
+    public EarlyPayment(BigDecimal amount, EarlyPaymentStrategy type, EarlyPaymentRepeatingStrategy repeatingStrategy) {
         this.amount = amount;
         this.strategy = type;
+        this.repeatingStrategy = repeatingStrategy;
     }
 
     /**
@@ -41,18 +47,26 @@ public class EarlyPayment implements Serializable {
         return strategy;
     }
 
+    /**
+     * @return Repeating strategy
+     */
+    public EarlyPaymentRepeatingStrategy getRepeatingStrategy() {
+        return repeatingStrategy;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EarlyPayment that = (EarlyPayment) o;
         return Objects.equals(amount, that.amount) &&
-                strategy == that.strategy;
+                strategy == that.strategy &&
+                repeatingStrategy == that.repeatingStrategy;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount, strategy);
+        return Objects.hash(amount, strategy, repeatingStrategy);
     }
 
     @Override
@@ -60,6 +74,7 @@ public class EarlyPayment implements Serializable {
         return "EarlyPayment{" +
                 "amount=" + amount +
                 ", strategy=" + strategy +
+                ", repeatingStrategy=" + repeatingStrategy +
                 '}';
     }
 }

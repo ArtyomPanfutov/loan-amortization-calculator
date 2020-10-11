@@ -1,10 +1,7 @@
 package service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.EarlyPayment;
-import domain.EarlyPaymentStrategy;
-import domain.Loan;
-import domain.LoanAmortization;
+import domain.*;
 import exception.LoanAmortizationCalculatorException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,7 +49,7 @@ public class LoanCalculatorTest {
     public void shouldCalculateWithOneEarlyPayment() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
-        earlyPayments.put(5, new EarlyPayment(BigDecimal.valueOf(50000), EarlyPaymentStrategy.DECREASE_TERM));
+        earlyPayments.put(5, new EarlyPayment(BigDecimal.valueOf(50000), EarlyPaymentStrategy.DECREASE_TERM, EarlyPaymentRepeatingStrategy.SINGLE));
 
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
