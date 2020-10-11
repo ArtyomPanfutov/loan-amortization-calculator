@@ -46,10 +46,13 @@ public class LoanCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithOneEarlyPayment() throws IOException {
+    public void shouldCalculateWithOneEarlyPaymentAndTermDecreasingStrategy() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
-        earlyPayments.put(5, new EarlyPayment(BigDecimal.valueOf(50000), EarlyPaymentStrategy.DECREASE_TERM, EarlyPaymentRepeatingStrategy.SINGLE));
+        earlyPayments.put(5, new EarlyPayment(
+                BigDecimal.valueOf(50000),
+                EarlyPaymentStrategy.DECREASE_TERM,
+                EarlyPaymentRepeatingStrategy.SINGLE));
 
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
@@ -64,6 +67,31 @@ public class LoanCalculatorTest {
         ObjectMapper objectMapper = new ObjectMapper();
 
         LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-one-early-payment(5th)-500000.32-4.56-32.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
+    }
+
+    @Test
+    public void shouldCalculateWithOneEarlyPaymentAndPaymentAmountDecreasingStrategy() throws IOException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+        earlyPayments.put(5, new EarlyPayment(
+                BigDecimal.valueOf(50000),
+                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
+                EarlyPaymentRepeatingStrategy.SINGLE));
+
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000.32))
+                .rate(BigDecimal.valueOf(4.56))
+                .earlyPayments(earlyPayments)
+                .term(32)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-one-early-payment(5th)-payment-decrease-500000.32-4.56-32.json"), LoanAmortization.class);
 
         assertEquals(reference, amortization);
     }

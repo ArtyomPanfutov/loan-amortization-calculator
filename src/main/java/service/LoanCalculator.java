@@ -1,9 +1,6 @@
 package service;
 
-import domain.EarlyPayment;
-import domain.Loan;
-import domain.LoanAmortization;
-import domain.MonthlyPayment;
+import domain.*;
 import exception.ExceptionType;
 import exception.LoanAmortizationCalculatorException;
 
@@ -39,12 +36,7 @@ public class LoanCalculator implements Calculator {
                                                 .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
                                                 .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
 
-        BigDecimal monthlyPaymentAmount = loan.getAmount()
-                                            .multiply(((monthlyInterestRate
-                                                            .multiply(BigDecimal.ONE.add(monthlyInterestRate).pow(loan.getTerm()))
-                                                        ).divide((BigDecimal.ONE.add(monthlyInterestRate).pow(loan.getTerm()).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
-                                                  )
-                                            );
+        BigDecimal monthlyPaymentAmount = getMonthlyPaymentAmount(loan.getAmount(), monthlyInterestRate, loan.getTerm());
 
         builder.monthlyPaymentAmount(monthlyPaymentAmount);
 
@@ -56,7 +48,7 @@ public class LoanCalculator implements Calculator {
 
             BigDecimal interestAmount = loanBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
 
-            // If something gets negative for some reason (because of early payments) we stop calculating and correct amount in the last payment
+            // If something gets negative for some reason (because of early payments) we stop calculating and correct the amount in the last payment
             if (interestAmount.compareTo(BigDecimal.ZERO) < 0 || loanBalance.compareTo(BigDecimal.ZERO) < 0) {
                 int lastPaymentNumber = i - 1;
 
@@ -79,7 +71,6 @@ public class LoanCalculator implements Calculator {
 
             overPaidInterestAmount = overPaidInterestAmount.add(interestAmount);
 
-
             EarlyPayment earlyPayment = earlyPayments.get(i);
             if (earlyPayment != null) {
                 additionalPaymentAmount = earlyPayment.getAmount();
@@ -87,14 +78,13 @@ public class LoanCalculator implements Calculator {
 
             if (i + 1 == loan.getTerm()) {
                 principalAmount = loanBalance;
-                paymentAmount = loanBalance;
             } else {
                 principalAmount = (monthlyPaymentAmount.subtract(interestAmount))
                                     .add(additionalPaymentAmount)
                                     .setScale(2, RoundingMode.HALF_UP);
-
-                paymentAmount = interestAmount.add(principalAmount);
             }
+
+            paymentAmount = interestAmount.add(principalAmount);
 
             payments.add(MonthlyPayment.builder()
                             .interestPaymentAmount(interestAmount)
@@ -106,6 +96,10 @@ public class LoanCalculator implements Calculator {
                             .build());
 
             loanBalance = loanBalance.subtract(principalAmount);
+
+            if (earlyPayment != null && earlyPayment.getStrategy() == EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT) {
+                monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, loan.getTerm() - 1 - i);
+            }
         }
 
         return builder
@@ -113,6 +107,22 @@ public class LoanCalculator implements Calculator {
                 .overPaymentAmount(overPaidInterestAmount)
                 .earlyPayments(earlyPayments)
                 .build();
+    }
+
+    /**
+     * Calculate monthly payment amount
+     * @param amount
+     * @param rate
+     * @param term
+     * @return
+     */
+    private BigDecimal getMonthlyPaymentAmount(BigDecimal amount, BigDecimal rate, Integer term) {
+        return  amount
+                    .multiply(((rate
+                                   .multiply(BigDecimal.ONE.add(rate).pow(term))
+                                ).divide((BigDecimal.ONE.add(rate).pow(term).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
+                             )
+                    ).setScale(2, RoundingMode.HALF_UP);
     }
 
     /**
