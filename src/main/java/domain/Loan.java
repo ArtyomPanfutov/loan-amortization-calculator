@@ -3,10 +3,12 @@ package domain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
  * This class represent input data for loan amortization calculation
+ *
  * @author Artyom Panfutov
  */
 public final class Loan implements Serializable {
@@ -28,15 +30,18 @@ public final class Loan implements Serializable {
     private final Integer term;
 
     /**
-     * Additional payments
+     * Early payments
+     *
+     * Key: number of payment in payment schedule
+     * Value: early payment data(amount, strategy)
      */
-    private final List<AdditionalPayment> additionalPayments;
+    private final Map<Integer, EarlyPayment> earlyPayments;
 
-    public Loan(BigDecimal amount, BigDecimal rate, Integer term, List<AdditionalPayment> additionalPayments) {
+    public Loan(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer,EarlyPayment> earlyPayments) {
         this.amount = amount;
         this.rate = rate;
         this.term = term;
-        this.additionalPayments = additionalPayments;
+        this.earlyPayments = earlyPayments;
     }
 
     /**
@@ -61,10 +66,15 @@ public final class Loan implements Serializable {
     }
 
     /**
-     * @return Additional payments
+     * Early payments
+     *
+     * Key: number of payment in payment schedule
+     * Value: early payment data(amount, strategy)
+     *
+     * @return Early payments
      */
-    public List<AdditionalPayment> getAdditionalPayments() {
-        return additionalPayments;
+    public Map<Integer, EarlyPayment> getEarlyPayments() {
+        return earlyPayments;
     }
 
     public static LoanBuilder builder() {
@@ -79,16 +89,16 @@ public final class Loan implements Serializable {
         private BigDecimal amount;
         private BigDecimal rate;
         private Integer term;
-        private List<AdditionalPayment> additionalPayments;
+        private Map<Integer, EarlyPayment> earlyPayments;
 
         public LoanBuilder() {
         }
 
-        public LoanBuilder(BigDecimal amount, BigDecimal rate, Integer term, List<AdditionalPayment> additionalPayments) {
+        public LoanBuilder(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments) {
             this.amount = amount;
             this.rate = rate;
             this.term = term;
-            this.additionalPayments = additionalPayments;
+            this.earlyPayments = earlyPayments;
         }
 
         public LoanBuilder amount(BigDecimal amount) {
@@ -106,15 +116,14 @@ public final class Loan implements Serializable {
             return this;
         }
 
-        public LoanBuilder additionalPayments(List<AdditionalPayment> additionalPayments) {
-            this.additionalPayments = additionalPayments;
+        public LoanBuilder earlyPayments(Map<Integer, EarlyPayment> earlyPayments) {
+            this.earlyPayments = earlyPayments;
             return this;
         }
 
         public Loan build() {
-            return new Loan(amount, rate, term, additionalPayments);
+            return new Loan(amount, rate, term, earlyPayments);
         }
-
     }
 
     @Override
@@ -122,14 +131,15 @@ public final class Loan implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Loan loan = (Loan) o;
-        return amount.equals(loan.amount) &&
-                rate.equals(loan.rate) &&
-                term.equals(loan.term);
+        return Objects.equals(amount, loan.amount) &&
+                Objects.equals(rate, loan.rate) &&
+                Objects.equals(term, loan.term) &&
+                Objects.equals(earlyPayments, loan.earlyPayments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount, rate, term);
+        return Objects.hash(amount, rate, term, earlyPayments);
     }
 
     @Override
@@ -138,6 +148,7 @@ public final class Loan implements Serializable {
                 "amount=" + amount +
                 ", rate=" + rate +
                 ", term=" + term +
+                ", earlyPayments=" + earlyPayments +
                 '}';
     }
 }

@@ -1,8 +1,8 @@
 package service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.AdditionalPayment;
-import domain.EarlyPaymentType;
+import domain.EarlyPayment;
+import domain.EarlyPaymentStrategy;
 import domain.Loan;
 import domain.LoanAmortization;
 import exception.LoanAmortizationCalculatorException;
@@ -50,13 +50,13 @@ public class LoanCalculatorTest {
 
     @Test
     public void shouldCalculateWithAdditionalPayments() {
-        List<AdditionalPayment> additionalPaymentList = new ArrayList<>();
+        List<EarlyPayment> earlyPaymentList = new ArrayList<>();
 
-        additionalPaymentList.add(new AdditionalPayment(5, BigDecimal.valueOf(50000), EarlyPaymentType.LOAN_TERM));
+        earlyPaymentList.add(new EarlyPayment(5, BigDecimal.valueOf(50000), EarlyPaymentStrategy.DECREASE_TERM));
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
                 .rate(BigDecimal.valueOf(4.56))
-                .additionalPayments(additionalPaymentList)
+//                .additionalPayments(earlyPaymentList)
                 .term(32)
                 .build();
 

@@ -43,7 +43,7 @@ public class LoanCalculator implements Calculator {
         BigDecimal loanBalance = loan.getAmount();
         BigDecimal overPaidInterestAmount = BigDecimal.ZERO;
 
-        List<AdditionalPayment> additionalPayments = loan.getAdditionalPayments() != null ? loan.getAdditionalPayments() : Collections.EMPTY_LIST;
+        List<EarlyPayment> earlyPayments = loan.getAdditionalPayments() != null ? loan.getAdditionalPayments() : Collections.EMPTY_LIST;
         for (int i = 0; i < loan.getTerm(); i++) {
             BigDecimal interestAmount = loanBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
 
@@ -67,11 +67,11 @@ public class LoanCalculator implements Calculator {
             BigDecimal principalAmount;
 
             BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
-            AtomicReference<AdditionalPayment> additionalPayment = new AtomicReference<>();
+            AtomicReference<EarlyPayment> additionalPayment = new AtomicReference<>();
 
             final Integer paymentNumber = i;
             // TODO temporary not optimal
-            additionalPayments.stream()
+            earlyPayments.stream()
                     .filter(payment -> payment.getNumber().equals(paymentNumber))
                     .findFirst()
                     .ifPresent(additionalPayment::set);
