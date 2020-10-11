@@ -1,4 +1,5 @@
-## Loan Amortization Calculator 
+## Java library for calculating loan amortization
+
 TODO 
 ```xml
 <dependency>
