@@ -23,7 +23,7 @@ public class LoanCalculator implements Calculator {
      * @param loan
      * @return Calculated loan amortization
      */
-    // TODO Refactor math context
+    // TODO Refactor
     @Override
     public LoanAmortization calculate(Loan loan) {
         validate(loan);
