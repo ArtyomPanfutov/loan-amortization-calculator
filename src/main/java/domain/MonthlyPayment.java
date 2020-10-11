@@ -18,12 +18,12 @@ public final class MonthlyPayment implements Serializable {
     private final Integer monthNumber;
 
     /**
-     * Amount of remaining debt (Balance)
+     * Amount of remaining debt (balance)
      */
     private final BigDecimal loanBalanceAmount;
 
     /**
-     * Amount of debt in payment (Principal)
+     * Amount of debt in payment (principal)
      */
     private final BigDecimal debtPaymentAmount;
 
@@ -60,14 +60,14 @@ public final class MonthlyPayment implements Serializable {
     }
 
     /**
-     * @return Amount of remaining debt (Balance)
+     * @return Amount of remaining debt (loan balance)
      */
     public BigDecimal getLoanBalanceAmount() {
         return loanBalanceAmount;
     }
 
     /**
-     * @return Amount of debt in payment (Principal)
+     * @return Amount of debt in payment (principal debt amount)
      */
     public BigDecimal getDebtPaymentAmount() {
         return debtPaymentAmount;

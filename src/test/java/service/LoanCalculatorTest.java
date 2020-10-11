@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -49,20 +49,26 @@ public class LoanCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithAdditionalPayments() {
-        List<EarlyPayment> earlyPaymentList = new ArrayList<>();
+    public void shouldCalculateWithOneEarlyPayment() throws IOException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
-        earlyPaymentList.add(new EarlyPayment(5, BigDecimal.valueOf(50000), EarlyPaymentStrategy.DECREASE_TERM));
+        earlyPayments.put(5, new EarlyPayment(BigDecimal.valueOf(50000), EarlyPaymentStrategy.DECREASE_TERM));
+
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
                 .rate(BigDecimal.valueOf(4.56))
-//                .additionalPayments(earlyPaymentList)
+                .earlyPayments(earlyPayments)
                 .term(32)
                 .build();
 
         LoanAmortization amortization = calculator.calculate(loan);
         assertNotNull(amortization);
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-one-early-payment(5th)-500000.32-4.56-32.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
     }
 
 

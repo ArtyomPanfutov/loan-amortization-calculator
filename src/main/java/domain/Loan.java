@@ -1,8 +1,8 @@
 package domain;
 
+import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,6 +37,7 @@ public final class Loan implements Serializable {
      */
     private final Map<Integer, EarlyPayment> earlyPayments;
 
+    @ConstructorProperties({"amount", "rate", "term", "earlyPayments"})
     public Loan(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer,EarlyPayment> earlyPayments) {
         this.amount = amount;
         this.rate = rate;
