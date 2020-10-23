@@ -96,6 +96,51 @@ public class LoanCalculatorTest {
         assertEquals(reference, amortization);
     }
 
+    @Test
+    public void shouldCalculateWithAllKindsOfEarlyPayment() throws IOException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+        earlyPayments.put(0, new EarlyPayment(
+                BigDecimal.valueOf(5000),
+                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
+                EarlyPaymentRepeatingStrategy.SINGLE));
+
+        earlyPayments.put(1, new EarlyPayment(
+                BigDecimal.valueOf(50000),
+                EarlyPaymentStrategy.DECREASE_TERM,
+                EarlyPaymentRepeatingStrategy.SINGLE));
+
+        earlyPayments.put(3, new EarlyPayment(
+                BigDecimal.valueOf(30000),
+                EarlyPaymentStrategy.DECREASE_TERM,
+                EarlyPaymentRepeatingStrategy.SINGLE));
+
+        earlyPayments.put(5, new EarlyPayment(
+                BigDecimal.valueOf(50000),
+                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
+                EarlyPaymentRepeatingStrategy.SINGLE));
+
+        earlyPayments.put(6, new EarlyPayment(
+                BigDecimal.valueOf(10000),
+                EarlyPaymentStrategy.DECREASE_TERM,
+                EarlyPaymentRepeatingStrategy.SINGLE));
+
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000.32))
+                .rate(BigDecimal.valueOf(4.56))
+                .earlyPayments(earlyPayments)
+                .term(10)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-different-early-payments-500000.32-4.56-32.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
+    }
+
 
     @Test
     public void shouldFailWhenLoanIsNull() {

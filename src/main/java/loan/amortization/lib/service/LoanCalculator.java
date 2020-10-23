@@ -43,8 +43,10 @@ public class LoanCalculator implements Calculator {
 
         builder.monthlyPaymentAmount(monthlyPaymentAmount);
 
+        int term = loan.getTerm();
+
         // Calculate payments schedule
-        for (int i = 0; i < loan.getTerm(); i++) {
+        for (int i = 0; i < term; i++) {
             BigDecimal principalAmount;
             BigDecimal paymentAmount;
             BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
@@ -101,7 +103,10 @@ public class LoanCalculator implements Calculator {
             loanBalance = loanBalance.subtract(principalAmount);
 
             if (earlyPayment != null && earlyPayment.getStrategy() == EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT) {
-                monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, loan.getTerm() - 1 - i);
+                    BigDecimal decreaseTermEarlyPaymentSum = getEarlyPaymentSumBefore(loan, loanBalance, i, EarlyPaymentStrategy.DECREASE_TERM);
+                    logger.info("Previous early payments(decrease term strategy): " + decreaseTermEarlyPaymentSum);
+
+                    monthlyPaymentAmount = getMonthlyPaymentAmount(decreaseTermEarlyPaymentSum, monthlyInterestRate, term - 1 - i );
             }
         }
 
@@ -114,6 +119,18 @@ public class LoanCalculator implements Calculator {
         logger.info("Calculation result: " + result);
 
         return result;
+    }
+
+    private BigDecimal getEarlyPaymentSumBefore(Loan loan, BigDecimal loanBalance, int beforePaymentNumber, EarlyPaymentStrategy strategy) {
+        BigDecimal previousEarlyPaymentSum = BigDecimal.ZERO;
+
+        for (Map.Entry<Integer, EarlyPayment> entry : loan.getEarlyPayments().entrySet()) {
+            if (entry.getKey() < beforePaymentNumber && entry.getValue().getStrategy() == strategy)  {
+                previousEarlyPaymentSum = previousEarlyPaymentSum.add(entry.getValue().getAmount());
+            }
+        }
+        previousEarlyPaymentSum = loanBalance.add(previousEarlyPaymentSum);
+        return previousEarlyPaymentSum;
     }
 
     /**
