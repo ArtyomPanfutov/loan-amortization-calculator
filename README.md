@@ -12,15 +12,44 @@
 
 
 Usage example:
+
+1. Regular loan without additional payments
 ```java
         Loan loan = Loan.builder()
-                .amount(BigDecimal.valueOf(500000.32))
-                .rate(BigDecimal.valueOf(4.56))
-                .term(32)
+                .amount(BigDecimal.valueOf(500000.32)) // Debt amount
+                .rate(BigDecimal.valueOf(4.56))        // Interest rate
+                .term(32)                              // Loan term in MONTHS
                 .build();
                 
         LoanCalculator calculator = new LoanCalculator();
+        LoanAmortization amortization = calculator.calculate(loan);
 
+```
+2. Loan with different kinds of addtitional payments 
+```java
+
+        // Key - payment number in loan amortization schedule(starts with 0)
+        // Value - additional payment attributes
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+        
+        earlyPayments.put(3, new EarlyPayment(
+                BigDecimal.valueOf(30000),                // Amount of additional payment
+                EarlyPaymentStrategy.DECREASE_TERM,       // Strategy of this additional payment that would be applied to the loan
+                EarlyPaymentRepeatingStrategy.SINGLE));   // Repeating strategy for this addtional payment 
+
+        earlyPayments.put(5, new EarlyPayment(
+                BigDecimal.valueOf(50000),
+                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
+                EarlyPaymentRepeatingStrategy.SINGLE));
+
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000.32))    // Loan debt
+                .rate(BigDecimal.valueOf(4.56))           // Interest rate
+                .earlyPayments(earlyPayments)             // Additional payments
+                .term(10)                                 // Loan term in MONTHS
+                .build();
+
+        LoanCalculator calculator = new LoanCalculator();
         LoanAmortization amortization = calculator.calculate(loan);
 
 ```
