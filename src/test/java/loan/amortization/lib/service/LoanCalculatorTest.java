@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Tests for LoanCalculator
+ *
  * @author Artyom Panfutov
  */
 public class LoanCalculatorTest {

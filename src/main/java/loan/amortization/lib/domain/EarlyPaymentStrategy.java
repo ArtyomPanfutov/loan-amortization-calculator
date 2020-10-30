@@ -3,13 +3,13 @@ package loan.amortization.lib.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents strategies that can be applied to loan when exists overpayment
+ * Represents strategies that can be applied to loan additional payments
  *
  * @author Artyom Panfutov
  */
 public enum EarlyPaymentStrategy {
     /**
-     * Early payment decreases the term
+     * Early payment decreases the loan term
      */
     @JsonProperty("decrease_term")
     DECREASE_TERM,

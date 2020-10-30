@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * This class represent input data for loan amortization calculation
+ * This class represent input attributes of loan
  *
  * @author Artyom Panfutov
  */
@@ -15,7 +15,7 @@ public final class Loan implements Serializable {
     private static final long serialVersionUID = 8435495249049946452L;
 
     /**
-     * Loan amount
+     * Debt amount (principal)
      */
     private final BigDecimal amount;
 
@@ -30,9 +30,9 @@ public final class Loan implements Serializable {
     private final Integer term;
 
     /**
-     * Early payments
+     * Early payments (or additional payments)
      *
-     * Key: number of payment in payment schedule
+     * Key: number of payment in payment schedule (starts with 0)
      * Value: early payment data(amount, strategy)
      */
     private final Map<Integer, EarlyPayment> earlyPayments;
@@ -46,7 +46,7 @@ public final class Loan implements Serializable {
     }
 
     /**
-     * @return Loan amount
+     * @return Debt amount (principal)
      */
     public BigDecimal getAmount() {
         return amount;
@@ -67,7 +67,7 @@ public final class Loan implements Serializable {
     }
 
     /**
-     * Early payments
+     * Early payments (or additional payments)
      *
      * Key: number of payment in payment schedule
      * Value: early payment data(amount, strategy)
@@ -102,16 +102,34 @@ public final class Loan implements Serializable {
             this.earlyPayments = earlyPayments;
         }
 
+        /**
+         * Dept amount (principal)
+         *
+         * @param amount loan amount
+         * @return loan builder
+         */
         public LoanBuilder amount(BigDecimal amount) {
             this.amount = amount;
             return this;
         }
 
+        /**
+         * Interest rate
+         *
+         * @param rate interest rate
+         * @return loan builder
+         */
         public LoanBuilder rate(BigDecimal rate) {
             this.rate = rate;
             return this;
         }
 
+        /**
+         * Loan term in months
+         *
+         * @param term (months)
+         * @return loan builder
+         */
         public LoanBuilder term(Integer term) {
             this.term = term;
             return this;

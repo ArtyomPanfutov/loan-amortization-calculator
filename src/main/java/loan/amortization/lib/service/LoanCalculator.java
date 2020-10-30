@@ -8,10 +8,15 @@ import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Loan amortization calculator
+ * Implementation of loan amortization calculator
+ *
+ * Calculates ANNUAL amortization schedule
  *
  * @author Artyom Panfutov
  */
@@ -19,39 +24,42 @@ public class LoanCalculator implements Calculator {
     private static final Logger logger = LogManager.getLogger(LoanCalculator.class);
 
     /**
-     * Calculate payment
-     * @param loan
-     * @return Calculated loan amortization
+     * Calculates annual loan amortization schedule
+     *
+     * @param loan Loan attributes
+     *
+     * @return Calculated loan amortization schedule {@link LoanAmortization}
      */
-    // TODO Refactor
     @Override
     public LoanAmortization calculate(Loan loan) {
         validate(loan);
 
-        LoanAmortization.LoanAmortizationBuilder builder = LoanAmortization.builder();
-
         BigDecimal overPaidInterestAmount = BigDecimal.ZERO;
-        List<MonthlyPayment> payments = new ArrayList<>();
+
         Map<Integer, EarlyPayment> earlyPayments = loan.getEarlyPayments() != null ? loan.getEarlyPayments() : Collections.EMPTY_MAP;
         BigDecimal loanBalance = loan.getAmount();
 
         BigDecimal monthlyInterestRate = loan.getRate()
                                                 .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
                                                 .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
-
-        BigDecimal monthlyPaymentAmount = getMonthlyPaymentAmount(loan.getAmount(), monthlyInterestRate, loan.getTerm());
-
-        builder.monthlyPaymentAmount(monthlyPaymentAmount);
+        logger.info("Calculated monthly interest rate: {}", monthlyInterestRate);
 
         int term = loan.getTerm();
+        BigDecimal monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, term);
 
-        // Calculate payments schedule
+        LoanAmortization.LoanAmortizationBuilder amortizationBuilder = LoanAmortization.builder();
+        amortizationBuilder.monthlyPaymentAmount(monthlyPaymentAmount);
+
+        // Calculate amortization schedule
+        List<MonthlyPayment> payments = new ArrayList<>();
         for (int i = 0; i < term; i++) {
             BigDecimal principalAmount;
             BigDecimal paymentAmount;
             BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
 
-            BigDecimal interestAmount = loanBalance.multiply(monthlyInterestRate).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal interestAmount = loanBalance
+                    .multiply(monthlyInterestRate)
+                    .setScale(2, RoundingMode.HALF_UP);
 
             // If something gets negative for some reason (because of early payments) we stop calculating and correct the amount in the last payment
             if (interestAmount.compareTo(BigDecimal.ZERO) < 0 || loanBalance.compareTo(BigDecimal.ZERO) < 0) {
@@ -103,14 +111,13 @@ public class LoanCalculator implements Calculator {
             loanBalance = loanBalance.subtract(principalAmount);
 
             if (earlyPayment != null && earlyPayment.getStrategy() == EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT) {
-                    BigDecimal decreaseTermEarlyPaymentSum = getEarlyPaymentSumBefore(loan, loanBalance, i, EarlyPaymentStrategy.DECREASE_TERM);
-                    logger.info("Previous early payments(decrease term strategy): " + decreaseTermEarlyPaymentSum);
+                    BigDecimal additionalPaymentsWithRemainingLoanBalance = getTotalAmountOfEarlyPaymentsWithLoanBalanceUntilPayment(loan, loanBalance, i);
 
-                    monthlyPaymentAmount = getMonthlyPaymentAmount(decreaseTermEarlyPaymentSum, monthlyInterestRate, term - 1 - i );
+                    monthlyPaymentAmount = getMonthlyPaymentAmount(additionalPaymentsWithRemainingLoanBalance, monthlyInterestRate, term - 1 - i );
             }
         }
 
-        LoanAmortization result = builder
+        LoanAmortization result = amortizationBuilder
                 .monthlyPayments(Collections.unmodifiableList(payments))
                 .overPaymentAmount(overPaidInterestAmount)
                 .earlyPayments(earlyPayments)
@@ -121,32 +128,50 @@ public class LoanCalculator implements Calculator {
         return result;
     }
 
-    private BigDecimal getEarlyPaymentSumBefore(Loan loan, BigDecimal loanBalance, int beforePaymentNumber, EarlyPaymentStrategy strategy) {
-        BigDecimal previousEarlyPaymentSum = BigDecimal.ZERO;
+    /**
+     * Calculates total amount of early payments with strategy {@link EarlyPaymentStrategy#DECREASE_TERM}
+     * until certain payment number in the schedule + remaining loan balance
+     *
+     * This method is used for right calculation of amortization when there are different kinds of additional payments
+     * and we need to include this amount in calculation of monthly payment amount
+     *
+     * @param loan loan attributes
+     * @param loanBalance current loan balance
+     * @param untilThisPayment current payment number
+     *
+     * @return total amount of early payments + remaining loan balance
+     */
+    private BigDecimal getTotalAmountOfEarlyPaymentsWithLoanBalanceUntilPayment(Loan loan, BigDecimal loanBalance, int untilThisPayment) {
+        BigDecimal totalAmount = BigDecimal.ZERO;
 
         for (Map.Entry<Integer, EarlyPayment> entry : loan.getEarlyPayments().entrySet()) {
-            if (entry.getKey() < beforePaymentNumber && entry.getValue().getStrategy() == strategy)  {
-                previousEarlyPaymentSum = previousEarlyPaymentSum.add(entry.getValue().getAmount());
+            if (entry.getKey() < untilThisPayment && entry.getValue().getStrategy() == EarlyPaymentStrategy.DECREASE_TERM)  {
+                totalAmount = totalAmount.add(entry.getValue().getAmount());
             }
         }
-        previousEarlyPaymentSum = loanBalance.add(previousEarlyPaymentSum);
-        return previousEarlyPaymentSum;
+        totalAmount = loanBalance.add(totalAmount);
+        logger.info("Calculating total amount of early payments(decrease term strategy) with remaining loan balance:{}, until payment number: {}\n Result: {}",
+                loanBalance, untilThisPayment, totalAmount);
+
+        return totalAmount;
     }
 
     /**
-     * Calculate monthly payment amount
-     * @param amount
-     * @param rate
-     * @param term
-     * @return
+     * Calculates monthly payment amount
+     *
+     * @param amount loan balance
+     * @param rate monthly interest rate
+     * @param term loan term in months
+     *
+     * @return monthly payment amount
      */
     private BigDecimal getMonthlyPaymentAmount(BigDecimal amount, BigDecimal rate, Integer term) {
         logger.info("Calculating monthly payment amount for: {}, {}, {}", amount, rate, term);
 
-        BigDecimal monthlyPaymentAmount = amount
-                .multiply(((rate
-                                .multiply(BigDecimal.ONE.add(rate).pow(term))
-                        ).divide((BigDecimal.ONE.add(rate).pow(term).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
+        BigDecimal monthlyPaymentAmount =
+                amount.multiply(((rate
+                                    .multiply(BigDecimal.ONE.add(rate).pow(term)))
+                                .divide((BigDecimal.ONE.add(rate).pow(term).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
                         )
                 ).setScale(2, RoundingMode.HALF_UP);
 
@@ -155,11 +180,11 @@ public class LoanCalculator implements Calculator {
     }
 
     /**
-     * Validates input loan
-     * @param loan
+     * Validates loan attributes
+     *
+     * @param loan loan attributes
+     * @throws LoanAmortizationCalculatorException
      */
-    // TODO Need to make message more clear about what property is not valid
-    //      Also this method is not readable :(
     private void validate(Loan loan) {
         logger.info("Validating input. Loan: " + loan);
 

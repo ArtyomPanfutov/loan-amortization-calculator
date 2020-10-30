@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents loan amortization calculation result
+ * Represents loan amortization attributes
  *
  * @author Artyom Panfutov
  */
@@ -16,24 +16,24 @@ public final class LoanAmortization implements Serializable {
     private static final long serialVersionUID = 6600584767577828784L;
 
     /**
-     * Amount of monthly payment
+     * Amount of calculated monthly payment
      */
     private final BigDecimal monthlyPaymentAmount;
 
     /**
-     * Overpayment of interest
+     * Total amount of overpayment of interests
      */
     private final BigDecimal overPaymentAmount;
 
     /**
-     * Calculated list of monthly payments
+     * Calculated list of monthly payments (amortization)
      */
     private final List<MonthlyPayment> monthlyPayments;
 
     /**
      * Early payments
      *
-     * Key: number of payment in payment schedule
+     * Key: number of payment in payment schedule (starts with 0)
      * Value: early payment data(amount, strategy)
      *
      * @return Early payments
@@ -53,28 +53,28 @@ public final class LoanAmortization implements Serializable {
     }
 
     /**
-     * @return Monthly payment amount
+     * @return Amount of calculated monthly payment
      */
     public BigDecimal getMonthlyPaymentAmount() {
         return monthlyPaymentAmount;
     }
 
     /**
-     * @return Total overpayment (interests)
+     * @return Total amount of overpayment of interests
      */
     public BigDecimal getOverPaymentAmount() {
         return overPaymentAmount;
     }
 
     /**
-     * @return Payments schedule
+     * @return Calculated list of monthly payments (amortization)
      */
     public List<MonthlyPayment> getMonthlyPayments() {
         return monthlyPayments;
     }
 
     /**
-     * Key: number of payment in payment schedule
+     * Key: number of payment in payment schedule (starts with 0)
      * Value: early payment data(amount, strategy)
      *
      * @return Early payments (additional payments to monthly payments)

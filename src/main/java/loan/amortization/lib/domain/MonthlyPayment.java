@@ -6,14 +6,15 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * Represents detailed information about monthly payment
+ * Represents detailed information about monthly payment in loan amortization
+ *
  * @author Artyom Panfutov
  */
 public final class MonthlyPayment implements Serializable {
     private static final long serialVersionUID = -8046672296117265073L;
 
     /**
-     * Month
+     * Month number (starts with 0)
      */
     private final Integer monthNumber;
 
@@ -23,7 +24,7 @@ public final class MonthlyPayment implements Serializable {
     private final BigDecimal loanBalanceAmount;
 
     /**
-     * Amount of debt in payment (principal)
+     * Amount of debt in payment (principal piece in payment)
      */
     private final BigDecimal debtPaymentAmount;
 
@@ -53,7 +54,7 @@ public final class MonthlyPayment implements Serializable {
     }
 
     /**
-     * @return Month number
+     * @return Month number (starts with 0)
      */
     public Integer getMonthNumber() {
         return monthNumber;
@@ -67,7 +68,7 @@ public final class MonthlyPayment implements Serializable {
     }
 
     /**
-     * @return Amount of debt in payment (principal debt amount)
+     * @return Amount of debt in payment (principal debt amount in payment)
      */
     public BigDecimal getDebtPaymentAmount() {
         return debtPaymentAmount;
@@ -97,6 +98,7 @@ public final class MonthlyPayment implements Serializable {
     public static MonthlyPaymentBuilder builder() {
         return new MonthlyPaymentBuilder();
     }
+
     /**
      * Builder for MonthlyPayment
      */
