@@ -14,7 +14,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
-    <version>0.0.10</version>
+    <version>0.0.11</version>
     <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

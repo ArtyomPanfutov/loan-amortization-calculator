@@ -130,14 +130,16 @@ public class LoanCalculator implements Calculator {
     /**
      * Implements early payment repeating strategy
      *
+     * Iterates through early payments entries and implements first found repeating strategy
      * @param loan loan attributes
      */
-    // TODO Refactor
+    // TODO Refactor !!!
     private Loan prepareRepeatableEarlyPayments(Loan loan) {
         Map<Integer, EarlyPayment> newEarlyPayments = new HashMap<>();
+
         if (loan.getEarlyPayments() != null) {
             Set<Map.Entry<Integer, EarlyPayment>> payments = loan.getEarlyPayments().entrySet();
-            newEarlyPayments = new HashMap<>(loan.getEarlyPayments());
+            newEarlyPayments = new HashMap<>();
 
             for (Map.Entry<Integer, EarlyPayment> entry : payments) {
                 EarlyPayment earlyPayment = entry.getValue();
@@ -145,14 +147,13 @@ public class LoanCalculator implements Calculator {
                 if (earlyPayment.getRepeatingStrategy() == EarlyPaymentRepeatingStrategy.TO_END) {
                     logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
-                    for (int i = entry.getKey() + 1; i < loan.getTerm(); i++) {
-                        newEarlyPayments.put(i, new EarlyPayment(
-                                earlyPayment.getAmount(),
-                                earlyPayment.getStrategy(),
-                                EarlyPaymentRepeatingStrategy.SINGLE,
-                                null
-                        ));
-                    }
+                    repeatEarlyPayment(
+                            entry.getKey(),         // from
+                            loan.getTerm(),         // to
+                            newEarlyPayments,       // destination
+                            earlyPayment            // source
+                    );
+
                     // Strategy implemented - stop the cycle
                     break;
 
@@ -160,19 +161,27 @@ public class LoanCalculator implements Calculator {
                     logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
 
                     int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
-                    for (int i = entry.getKey() + 1; i < repeatTo; i++) {
-                        newEarlyPayments.put(i, new EarlyPayment(
-                                earlyPayment.getAmount(),
-                                earlyPayment.getStrategy(),
-                                EarlyPaymentRepeatingStrategy.SINGLE,
-                                null
-                        ));
-                    }
+                    repeatEarlyPayment(
+                            entry.getKey(),         // from
+                            repeatTo,               // to
+                            newEarlyPayments,       // destination
+                            earlyPayment            // source
+                    );
+
                     // Strategy implemented - stop the cycle
                     break;
+
+                } else {
+                    newEarlyPayments.put(entry.getKey(), new EarlyPayment(
+                            earlyPayment.getAmount(),
+                            earlyPayment.getStrategy(),
+                            EarlyPaymentRepeatingStrategy.SINGLE,
+                            null
+                    ));
                 }
             }
         }
+
 
         logger.info("After applying repeating strategy: " + newEarlyPayments);
         return Loan.builder()
@@ -181,6 +190,25 @@ public class LoanCalculator implements Calculator {
                 .rate(loan.getRate())
                 .term(loan.getTerm())
                 .build();
+    }
+
+    /**
+     * Copies early payment to end from
+     *
+     * @param fromPayment number of payment from which to start copying
+     * @param toPayment number of payment to stop copying
+     * @param newEarlyPayments destination map for copying
+     * @param earlyPayment source payment
+     */
+    private void repeatEarlyPayment(int fromPayment, int toPayment, Map<Integer, EarlyPayment> newEarlyPayments, EarlyPayment earlyPayment) {
+        for (int i = fromPayment; i < toPayment; i++) {
+            newEarlyPayments.put(i, new EarlyPayment(
+                    earlyPayment.getAmount(),
+                    earlyPayment.getStrategy(),
+                    EarlyPaymentRepeatingStrategy.SINGLE,
+                    null
+            ));
+        }
     }
 
     /**
