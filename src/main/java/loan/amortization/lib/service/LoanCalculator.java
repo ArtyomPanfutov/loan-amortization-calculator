@@ -132,6 +132,7 @@ public class LoanCalculator implements Calculator {
      *
      * @param loan loan attributes
      */
+    // TODO Refactor
     private Loan prepareRepeatableEarlyPayments(Loan loan) {
         Map<Integer, EarlyPayment> newEarlyPayments = new HashMap<>();
         if (loan.getEarlyPayments() != null) {
@@ -145,17 +146,30 @@ public class LoanCalculator implements Calculator {
                     logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
                     for (int i = entry.getKey() + 1; i < loan.getTerm(); i++) {
-                        newEarlyPayments.put(i, earlyPayment);
+                        newEarlyPayments.put(i, new EarlyPayment(
+                                earlyPayment.getAmount(),
+                                earlyPayment.getStrategy(),
+                                EarlyPaymentRepeatingStrategy.SINGLE,
+                                null
+                        ));
                     }
                     // Strategy implemented - stop the cycle
                     break;
+
                 } else if (earlyPayment.getRepeatingStrategy() == EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH) {
                     logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
 
                     int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
                     for (int i = entry.getKey() + 1; i < repeatTo; i++) {
-                        newEarlyPayments.put(i, earlyPayment);
+                        newEarlyPayments.put(i, new EarlyPayment(
+                                earlyPayment.getAmount(),
+                                earlyPayment.getStrategy(),
+                                EarlyPaymentRepeatingStrategy.SINGLE,
+                                null
+                        ));
                     }
+                    // Strategy implemented - stop the cycle
+                    break;
                 }
             }
         }
