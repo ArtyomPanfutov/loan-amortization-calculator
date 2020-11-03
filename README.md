@@ -6,7 +6,7 @@
 <dependency>
   <groupId>paqua</groupId>
   <artifactId>loan-amortization-calculator</artifactId>
-  <version>0.0.7</version>
+  <version>0.0.11</version>
 </dependency>
 ```
 
@@ -35,12 +35,15 @@ Usage example:
         earlyPayments.put(3, new EarlyPayment(
                 BigDecimal.valueOf(30000),                // Amount of additional payment
                 EarlyPaymentStrategy.DECREASE_TERM,       // Strategy of this additional payment that would be applied to the loan
-                EarlyPaymentRepeatingStrategy.SINGLE));   // Repeating strategy for this addtional payment 
-
+                EarlyPaymentRepeatingStrategy.SINGLE,     // Repeating strategy for this addtional payment 
+                null                                      // Additional parameteres (optional)
+        ));   
         earlyPayments.put(5, new EarlyPayment(
                 BigDecimal.valueOf(50000),
                 EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null
+        ));
 
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))    // Loan debt
