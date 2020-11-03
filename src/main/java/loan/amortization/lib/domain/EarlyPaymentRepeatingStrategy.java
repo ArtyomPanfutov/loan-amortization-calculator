@@ -18,15 +18,12 @@ public enum EarlyPaymentRepeatingStrategy {
     /**
      * Repeats early payment for each payment in the payment schedule to the end of the loan term
      */
-    @Deprecated
     @JsonProperty("to_end")
     TO_END,
 
     /**
      * Repeats early payment between this date
      */
-    @Deprecated
-    @JsonProperty("from_date_to_date")
-    FROM_DATE_TO_DATE;
-
+    @JsonProperty("to_certain_month")
+    TO_CERTAIN_MONTH;
 }

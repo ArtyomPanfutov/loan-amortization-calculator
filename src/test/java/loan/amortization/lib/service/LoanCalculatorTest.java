@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,63 @@ public class LoanCalculatorTest {
     @BeforeEach
     public void initTarget() {
         calculator = new LoanCalculator();
+    }
+
+    @Test
+    public void shouldImplementRepeatingStrategyToEnd() throws IOException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+        earlyPayments.put(5, new EarlyPayment(
+                BigDecimal.valueOf(50000),
+                EarlyPaymentStrategy.DECREASE_TERM,
+                EarlyPaymentRepeatingStrategy.TO_END,
+                null
+                ));
+
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000.32))
+                .rate(BigDecimal.valueOf(4.56))
+                .earlyPayments(earlyPayments)
+                .term(32)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-repeating-strategy-to-end.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
+    }
+
+    @Test
+    public void shouldImplementRepeatingStrategyToCertainMonth() throws IOException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+        Map<EarlyPaymentAdditionalParameters, String> parameters = new HashMap<>();
+        parameters.put(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER, "10");
+
+        earlyPayments.put(5, new EarlyPayment(
+                BigDecimal.valueOf(50000),
+                EarlyPaymentStrategy.DECREASE_TERM,
+                EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH,
+                parameters
+        ));
+
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000.32))
+                .rate(BigDecimal.valueOf(4.56))
+                .earlyPayments(earlyPayments)
+                .term(32)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-repeating-strategy-to-certain-month.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
     }
 
     @Test
@@ -53,7 +111,8 @@ public class LoanCalculatorTest {
         earlyPayments.put(5, new EarlyPayment(
                 BigDecimal.valueOf(50000),
                 EarlyPaymentStrategy.DECREASE_TERM,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null));
 
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
@@ -79,7 +138,8 @@ public class LoanCalculatorTest {
         earlyPayments.put(5, new EarlyPayment(
                 BigDecimal.valueOf(50000),
                 EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null));
 
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))
@@ -104,27 +164,32 @@ public class LoanCalculatorTest {
         earlyPayments.put(0, new EarlyPayment(
                 BigDecimal.valueOf(5000),
                 EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null));
 
         earlyPayments.put(1, new EarlyPayment(
                 BigDecimal.valueOf(50000),
                 EarlyPaymentStrategy.DECREASE_TERM,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null));
 
         earlyPayments.put(3, new EarlyPayment(
                 BigDecimal.valueOf(30000),
                 EarlyPaymentStrategy.DECREASE_TERM,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null));
 
         earlyPayments.put(5, new EarlyPayment(
                 BigDecimal.valueOf(50000),
                 EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null));
 
         earlyPayments.put(6, new EarlyPayment(
                 BigDecimal.valueOf(10000),
                 EarlyPaymentStrategy.DECREASE_TERM,
-                EarlyPaymentRepeatingStrategy.SINGLE));
+                EarlyPaymentRepeatingStrategy.SINGLE,
+                null));
 
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))

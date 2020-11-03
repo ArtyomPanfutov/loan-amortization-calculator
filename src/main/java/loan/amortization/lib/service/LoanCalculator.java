@@ -8,10 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Implementation of loan amortization calculator
@@ -33,6 +30,8 @@ public class LoanCalculator implements Calculator {
     @Override
     public LoanAmortization calculate(Loan loan) {
         validate(loan);
+
+        loan = prepareRepeatableEarlyPayments(loan);
 
         BigDecimal overPaidInterestAmount = BigDecimal.ZERO;
 
@@ -126,6 +125,48 @@ public class LoanCalculator implements Calculator {
         logger.info("Calculation result: " + result);
 
         return result;
+    }
+
+    /**
+     * Implements early payment repeating strategy
+     *
+     * @param loan loan attributes
+     */
+    private Loan prepareRepeatableEarlyPayments(Loan loan) {
+        Map<Integer, EarlyPayment> newEarlyPayments = new HashMap<>();
+        if (loan.getEarlyPayments() != null) {
+            Set<Map.Entry<Integer, EarlyPayment>> payments = loan.getEarlyPayments().entrySet();
+            newEarlyPayments = new HashMap<>(loan.getEarlyPayments());
+
+            for (Map.Entry<Integer, EarlyPayment> entry : payments) {
+                EarlyPayment earlyPayment = entry.getValue();
+
+                if (earlyPayment.getRepeatingStrategy() == EarlyPaymentRepeatingStrategy.TO_END) {
+                    logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
+
+                    for (int i = entry.getKey() + 1; i < loan.getTerm(); i++) {
+                        newEarlyPayments.put(i, earlyPayment);
+                    }
+                    // Strategy implemented - stop the cycle
+                    break;
+                } else if (earlyPayment.getRepeatingStrategy() == EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH) {
+                    logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
+
+                    int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
+                    for (int i = entry.getKey() + 1; i < repeatTo; i++) {
+                        newEarlyPayments.put(i, earlyPayment);
+                    }
+                }
+            }
+        }
+
+        logger.info("After applying repeating strategy: " + newEarlyPayments);
+        return Loan.builder()
+                .amount(loan.getAmount())
+                .earlyPayments(newEarlyPayments)
+                .rate(loan.getRate())
+                .term(loan.getTerm())
+                .build();
     }
 
     /**
