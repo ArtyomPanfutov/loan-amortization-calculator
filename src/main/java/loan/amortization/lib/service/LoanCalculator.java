@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of loan amortization calculator
@@ -139,7 +140,9 @@ public class LoanCalculator implements Calculator {
 
         if (loan.getEarlyPayments() != null) {
             Set<Map.Entry<Integer, EarlyPayment>> payments = loan.getEarlyPayments().entrySet();
-            newEarlyPayments = new HashMap<>();
+            newEarlyPayments = loan.getEarlyPayments().entrySet().stream()
+                    .filter(entry -> entry.getValue().getRepeatingStrategy().equals(EarlyPaymentRepeatingStrategy.SINGLE))
+                    .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
 
             for (Map.Entry<Integer, EarlyPayment> entry : payments) {
                 EarlyPayment earlyPayment = entry.getValue();
@@ -171,13 +174,13 @@ public class LoanCalculator implements Calculator {
                     // Strategy implemented - stop the cycle
                     break;
 
-                } else {
-                    newEarlyPayments.put(entry.getKey(), new EarlyPayment(
-                            earlyPayment.getAmount(),
-                            earlyPayment.getStrategy(),
-                            EarlyPaymentRepeatingStrategy.SINGLE,
-                            null
-                    ));
+//                } else {
+//                    newEarlyPayments.put(entry.getKey(), new EarlyPayment(
+//                            earlyPayment.getAmount(),
+//                            earlyPayment.getStrategy(),
+//                            EarlyPaymentRepeatingStrategy.SINGLE,
+//                            null
+//                    ));
                 }
             }
         }
