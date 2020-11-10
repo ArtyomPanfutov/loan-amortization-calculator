@@ -173,14 +173,6 @@ public class LoanCalculator implements Calculator {
 
                     // Strategy implemented - stop the cycle
                     break;
-
-//                } else {
-//                    newEarlyPayments.put(entry.getKey(), new EarlyPayment(
-//                            earlyPayment.getAmount(),
-//                            earlyPayment.getStrategy(),
-//                            EarlyPaymentRepeatingStrategy.SINGLE,
-//                            null
-//                    ));
                 }
             }
         }
