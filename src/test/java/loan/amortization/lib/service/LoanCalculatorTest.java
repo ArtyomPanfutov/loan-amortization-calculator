@@ -94,6 +94,33 @@ public class LoanCalculatorTest {
     }
 
     @Test
+    public void shouldCalculateWithRepeatingStrategyToEnd() throws IOException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+        earlyPayments.put(0, new EarlyPayment(
+                BigDecimal.valueOf(60000),
+                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
+                EarlyPaymentRepeatingStrategy.TO_END,
+                null
+                ));
+
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(6535366))
+                .rate(BigDecimal.valueOf(3))
+                .earlyPayments(earlyPayments)
+                .term(12)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-repeating-strategy-to-end-from-first.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
+    }
+
+    @Test
     public void shouldImplementRepeatingStrategyToCertainMonth() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
