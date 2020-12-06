@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class LoanCalculator implements Calculator {
     private static final Logger logger = LogManager.getLogger(LoanCalculator.class);
     private static final Calculator ANNUAL_PAYMENT_CALCULATOR = new AnnualPaymentCalculator();
-    private static final Calculator ANNUAL_PAYMENT_CALCULATOR_WITH_PAYMENT_DATE = new AnnualPaymentCalculatorWithPaymentDate();
 
     /**
      * Calculates annual loan amortization schedule
@@ -37,8 +36,7 @@ public class LoanCalculator implements Calculator {
 
         loan = prepareRepeatableEarlyPayments(loan);
 
-        Calculator calculator = getCalculator(loan);
-        return calculator.calculate(loan);
+        return ANNUAL_PAYMENT_CALCULATOR.calculate(loan);
     }
 
     /**
@@ -160,11 +158,6 @@ public class LoanCalculator implements Calculator {
             ));
         }
     }
-
-    private Calculator getCalculator(Loan loan) {
-        return loan.getFirstPaymentDate() == null ? ANNUAL_PAYMENT_CALCULATOR : ANNUAL_PAYMENT_CALCULATOR_WITH_PAYMENT_DATE;
-    }
-
 }
 
 
