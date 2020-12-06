@@ -5,12 +5,16 @@ import loan.amortization.lib.domain.*;
 import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Collections;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author Artyom Panfutov
  */
 public class LoanCalculatorTest {
+    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private LoanCalculator calculator;
 
     @BeforeEach
@@ -53,6 +58,59 @@ public class LoanCalculatorTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-repeating-strategy-to-end.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
+    }
+
+    @Test
+    @Disabled
+    public void shouldCalculateWithFirstPaymentDate() throws IOException, ParseException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+//        Loan loan = Loan.builder()
+//                .amount(BigDecimal.valueOf(1500000))
+//                .rate(BigDecimal.valueOf(5.32))
+//                .earlyPayments(earlyPayments)
+////                .firstPaymentDate(LocalDate.parse("2014-07-02", DATE_TIME_FORMATTER))
+//                .term(96)
+//                .build();
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000))
+                .rate(BigDecimal.valueOf(5))
+                .earlyPayments(earlyPayments)
+//                .firstPaymentDate(LocalDate.parse("2014-07-02", DATE_TIME_FORMATTER))
+                .term(36)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(new File("src/test/resources/reference-with-first-payment-date.json"), amortization);
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-with-first-payment-date.json"), LoanAmortization.class);
+
+        assertEquals(reference, amortization);
+    }
+
+    @Test
+    @Disabled
+    public void shouldCalculateWhenFirstPaymentDateIsLastDayInMonth() throws IOException, ParseException {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+        Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(1500000))
+                .rate(BigDecimal.valueOf(5.32))
+                .earlyPayments(earlyPayments)
+                .firstPaymentDate(LocalDate.parse("2014-07-31", DATE_TIME_FORMATTER))
+                .term(96)
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(new File("src/test/resources/reference-when-first-payment-date-is-last-day.json"), amortization);
+        LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-when-first-payment-date-is-last-day.json"), LoanAmortization.class);
 
         assertEquals(reference, amortization);
     }
@@ -278,7 +336,7 @@ public class LoanCalculatorTest {
         });
 
         Assertions.assertThrows(LoanAmortizationCalculatorException.class, () ->{
-            calculator.calculate(new Loan(null, null, null, null));
+            calculator.calculate(new Loan(null, null, null, null, null));
         });
     }
 }

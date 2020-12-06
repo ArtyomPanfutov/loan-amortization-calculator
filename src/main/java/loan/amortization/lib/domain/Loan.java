@@ -1,8 +1,11 @@
 package loan.amortization.lib.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Objects;
 
@@ -29,6 +32,7 @@ public final class Loan implements Serializable {
      */
     private final Integer term;
 
+
     /**
      * Early payments (or additional payments)
      *
@@ -37,12 +41,19 @@ public final class Loan implements Serializable {
      */
     private final Map<Integer, EarlyPayment> earlyPayments;
 
-    @ConstructorProperties({"amount", "rate", "term", "earlyPayments"})
-    public Loan(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer,EarlyPayment> earlyPayments) {
+    /**
+     * First payment date (optional)
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private final LocalDate firstPaymentDate;
+
+    @ConstructorProperties({"amount", "rate", "term", "earlyPayments", "firstPaymentDate"})
+    public Loan(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
         this.amount = amount;
         this.rate = rate;
         this.term = term;
         this.earlyPayments = earlyPayments;
+        this.firstPaymentDate = firstPaymentDate;
     }
 
     /**
@@ -78,6 +89,13 @@ public final class Loan implements Serializable {
         return earlyPayments;
     }
 
+    /**
+     * @return First payment date
+     */
+    public LocalDate getFirstPaymentDate() {
+        return firstPaymentDate;
+    }
+
     public static LoanBuilder builder() {
         return new LoanBuilder();
     }
@@ -91,15 +109,17 @@ public final class Loan implements Serializable {
         private BigDecimal rate;
         private Integer term;
         private Map<Integer, EarlyPayment> earlyPayments;
+        private LocalDate firstPaymentDate;
 
         public LoanBuilder() {
         }
 
-        public LoanBuilder(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments) {
+        public LoanBuilder(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
             this.amount = amount;
             this.rate = rate;
             this.term = term;
             this.earlyPayments = earlyPayments;
+            this.firstPaymentDate = firstPaymentDate;
         }
 
         /**
@@ -140,8 +160,13 @@ public final class Loan implements Serializable {
             return this;
         }
 
+        public LoanBuilder firstPaymentDate(LocalDate firstPaymentDate) {
+            this.firstPaymentDate = firstPaymentDate;
+            return this;
+        }
+
         public Loan build() {
-            return new Loan(amount, rate, term, earlyPayments);
+            return new Loan(amount, rate, term, earlyPayments, firstPaymentDate);
         }
     }
 
@@ -153,12 +178,13 @@ public final class Loan implements Serializable {
         return Objects.equals(amount, loan.amount) &&
                 Objects.equals(rate, loan.rate) &&
                 Objects.equals(term, loan.term) &&
+                Objects.equals(firstPaymentDate, loan.firstPaymentDate) &&
                 Objects.equals(earlyPayments, loan.earlyPayments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount, rate, term, earlyPayments);
+        return Objects.hash(amount, rate, term, firstPaymentDate, earlyPayments);
     }
 
     @Override
@@ -167,6 +193,7 @@ public final class Loan implements Serializable {
                 "amount=" + amount +
                 ", rate=" + rate +
                 ", term=" + term +
+                ", firstPaymentDate=" + firstPaymentDate +
                 ", earlyPayments=" + earlyPayments +
                 '}';
     }
