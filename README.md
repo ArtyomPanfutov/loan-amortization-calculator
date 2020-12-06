@@ -6,7 +6,7 @@
 <dependency>
   <groupId>paqua</groupId>
   <artifactId>loan-amortization-calculator</artifactId>
-  <version>0.0.11</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
