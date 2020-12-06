@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 class AnnualPaymentCalculator implements Calculator{
-    private static final Logger logger = LogManager.getLogger(LoanCalculator.class);
+    private static final Logger logger = LogManager.getLogger(AnnualPaymentCalculator.class);
 
     @Override
     public LoanAmortization calculate(Loan loan) {
