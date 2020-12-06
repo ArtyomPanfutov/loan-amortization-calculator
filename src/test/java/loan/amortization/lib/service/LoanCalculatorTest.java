@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -63,37 +62,27 @@ public class LoanCalculatorTest {
     }
 
     @Test
-    @Disabled
     public void shouldCalculateWithFirstPaymentDate() throws IOException, ParseException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
-//        Loan loan = Loan.builder()
-//                .amount(BigDecimal.valueOf(1500000))
-//                .rate(BigDecimal.valueOf(5.32))
-//                .earlyPayments(earlyPayments)
-////                .firstPaymentDate(LocalDate.parse("2014-07-02", DATE_TIME_FORMATTER))
-//                .term(96)
-//                .build();
         Loan loan = Loan.builder()
-                .amount(BigDecimal.valueOf(500000))
-                .rate(BigDecimal.valueOf(5))
+                .amount(BigDecimal.valueOf(1500000))
+                .rate(BigDecimal.valueOf(5.32))
                 .earlyPayments(earlyPayments)
-//                .firstPaymentDate(LocalDate.parse("2014-07-02", DATE_TIME_FORMATTER))
-                .term(36)
+                .firstPaymentDate(LocalDate.parse("2014-07-02", DATE_TIME_FORMATTER))
+                .term(96)
                 .build();
 
         LoanAmortization amortization = calculator.calculate(loan);
         assertNotNull(amortization);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("src/test/resources/reference-with-first-payment-date.json"), amortization);
         LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-with-first-payment-date.json"), LoanAmortization.class);
 
         assertEquals(reference, amortization);
     }
 
     @Test
-    @Disabled
     public void shouldCalculateWhenFirstPaymentDateIsLastDayInMonth() throws IOException, ParseException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
@@ -109,7 +98,6 @@ public class LoanCalculatorTest {
         assertNotNull(amortization);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File("src/test/resources/reference-when-first-payment-date-is-last-day.json"), amortization);
         LoanAmortization reference = objectMapper.readValue(new File("src/test/resources/reference-when-first-payment-date-is-last-day.json"), LoanAmortization.class);
 
         assertEquals(reference, amortization);

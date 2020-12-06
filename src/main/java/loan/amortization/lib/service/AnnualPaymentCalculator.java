@@ -43,9 +43,7 @@ class AnnualPaymentCalculator implements Calculator{
             BigDecimal paymentAmount;
             BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
 
-            BigDecimal interestAmount = paymentDate == null
-                    ? getInterestAmountByBalanceAndMonthlyInterestRate(loanBalance, monthlyInterestRate)
-                    : getInterestAmountByBalanceRateAndDays(loanBalance, loan.getRate(), paymentDate.lengthOfMonth(), paymentDate.lengthOfYear());
+            BigDecimal interestAmount = calculateInterestAmount(loan, loanBalance, monthlyInterestRate, paymentDate);
 
             // If something gets negative for some reason (because of early payments) we stop calculating and correct the amount in the last payment
             if (interestAmount.compareTo(BigDecimal.ZERO) < 0 || loanBalance.compareTo(BigDecimal.ZERO) < 0) {
@@ -104,6 +102,10 @@ class AnnualPaymentCalculator implements Calculator{
                 if (term - 1 - i > 0) {
                     monthlyPaymentAmount = getMonthlyPaymentAmount(additionalPaymentsWithRemainingLoanBalance, monthlyInterestRate, term - 1 - i);
                 }
+            }
+
+            if (loan.getFirstPaymentDate() != null && paymentDate != null) {
+                paymentDate = getNextMonthPaymentDate(loan.getFirstPaymentDate(), paymentDate);
             }
         }
 
@@ -203,7 +205,7 @@ class AnnualPaymentCalculator implements Calculator{
         return currentLoanBalance.multiply(
                 (annualInterestRate.multiply(BigDecimal.valueOf(daysInMonth)))
                         .divide(BigDecimal.valueOf(100).multiply(BigDecimal.valueOf(daysInYear)), 15, RoundingMode.HALF_UP)
-        );
+        ).setScale(2, RoundingMode.HALF_UP);
     }
 
 
@@ -219,5 +221,25 @@ class AnnualPaymentCalculator implements Calculator{
         return currentLoanBalance
                 .multiply(monthlyInterestRate)
                 .setScale(2, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Calculates loan balance
+     *
+     * @param loan loan
+     * @param currentLoanBalance current loan balance
+     * @param monthlyInterestRate monthly interest rate
+     * @param paymentDate current payment date
+     *
+     * @return interest amount
+     */
+    private BigDecimal calculateInterestAmount(Loan loan, BigDecimal currentLoanBalance, BigDecimal monthlyInterestRate, LocalDate paymentDate) {
+        return paymentDate == null
+                ? getInterestAmountByBalanceAndMonthlyInterestRate(currentLoanBalance, monthlyInterestRate)
+                : getInterestAmountByBalanceRateAndDays(
+                    currentLoanBalance, loan.getRate(),
+                    paymentDate.minusMonths(1).lengthOfMonth(),
+                    paymentDate.minusMonths(1).lengthOfYear()
+                );
     }
 }
