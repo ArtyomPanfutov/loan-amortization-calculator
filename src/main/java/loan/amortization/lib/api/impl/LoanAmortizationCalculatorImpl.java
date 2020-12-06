@@ -64,8 +64,8 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                     logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
                     repeatEarlyPayment(
-                            entry.getKey(),         // from
-                            loan.getTerm(),         // to
+                            entry.getKey(),         // from number
+                            loan.getTerm(),         // to number
                             newEarlyPayments,       // destination
                             earlyPayment            // source
                     );
@@ -78,8 +78,8 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
 
                     int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
                     repeatEarlyPayment(
-                            entry.getKey(),         // from
-                            repeatTo,               // to
+                            entry.getKey(),         // from number
+                            repeatTo,               // to number
                             newEarlyPayments,       // destination
                             earlyPayment            // source
                     );
