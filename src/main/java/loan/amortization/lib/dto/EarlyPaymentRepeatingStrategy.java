@@ -1,4 +1,4 @@
-package loan.amortization.lib.domain;
+package loan.amortization.lib.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,7 +22,7 @@ public enum EarlyPaymentRepeatingStrategy {
     TO_END,
 
     /**
-     * Repeats early payment between this date
+     * Repeats early payment to specified month number
      */
     @JsonProperty("to_certain_month")
     TO_CERTAIN_MONTH;

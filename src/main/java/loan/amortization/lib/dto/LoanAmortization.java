@@ -1,4 +1,4 @@
-package loan.amortization.lib.domain;
+package loan.amortization.lib.dto;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;

@@ -1,6 +1,8 @@
-package loan.amortization.lib.service;
+package loan.amortization.lib.api.impl;
 
-import loan.amortization.lib.domain.*;
+import loan.amortization.lib.api.LoanAmortizationCalculator;
+import loan.amortization.lib.api.impl.message.Messages;
+import loan.amortization.lib.dto.*;
 import loan.amortization.lib.exception.ExceptionType;
 import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
 import org.apache.logging.log4j.LogManager;
@@ -19,9 +21,9 @@ import java.util.stream.Collectors;
  *
  * @author Artyom Panfutov
  */
-public class LoanCalculator implements Calculator {
-    private static final Logger logger = LogManager.getLogger(LoanCalculator.class);
-    private static final Calculator ANNUAL_PAYMENT_CALCULATOR = new AnnualPaymentCalculator();
+public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
+    private static final Logger logger = LogManager.getLogger(LoanAmortizationCalculatorImpl.class);
+    private static final LoanAmortizationCalculator ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR = new AnnualPaymentLoanCalculator();
 
     /**
      * Calculates annual loan amortization schedule
@@ -36,7 +38,7 @@ public class LoanCalculator implements Calculator {
 
         loan = prepareRepeatableEarlyPayments(loan);
 
-        return ANNUAL_PAYMENT_CALCULATOR.calculate(loan);
+        return ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR.calculate(loan);
     }
 
     /**

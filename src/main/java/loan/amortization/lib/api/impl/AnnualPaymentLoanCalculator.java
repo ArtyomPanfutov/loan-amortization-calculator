@@ -1,6 +1,7 @@
-package loan.amortization.lib.service;
+package loan.amortization.lib.api.impl;
 
-import loan.amortization.lib.domain.*;
+import loan.amortization.lib.api.LoanAmortizationCalculator;
+import loan.amortization.lib.dto.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,8 +14,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-class AnnualPaymentCalculator implements Calculator{
-    private static final Logger logger = LogManager.getLogger(AnnualPaymentCalculator.class);
+/**
+ * Implementation of annual payment loan amortization calculator
+ *
+ * @author Artyom Panfutov
+ */
+class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
+    private static final Logger logger = LogManager.getLogger(AnnualPaymentLoanCalculator.class);
 
     @Override
     public LoanAmortization calculate(Loan loan) {

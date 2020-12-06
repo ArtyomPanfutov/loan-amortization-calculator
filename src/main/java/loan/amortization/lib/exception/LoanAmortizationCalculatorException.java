@@ -1,5 +1,11 @@
 package loan.amortization.lib.exception;
 
+/**
+ * Custom runtime exception for this lib
+ * Contains {@link ExceptionType} that might help to classify an error
+ *
+ * @author Artyom Panfutov
+ */
 public class LoanAmortizationCalculatorException extends RuntimeException {
     private static final long serialVersionUID = -7709387093821627328L;
 

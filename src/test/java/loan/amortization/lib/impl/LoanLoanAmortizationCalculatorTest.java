@@ -1,11 +1,11 @@
-package loan.amortization.lib.service;
+package loan.amortization.lib.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import loan.amortization.lib.domain.*;
+import loan.amortization.lib.api.impl.LoanAmortizationCalculatorImpl;
+import loan.amortization.lib.dto.*;
 import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -25,13 +25,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Artyom Panfutov
  */
-public class LoanCalculatorTest {
+public class LoanLoanAmortizationCalculatorTest {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private LoanCalculator calculator;
+    private LoanAmortizationCalculatorImpl calculator;
 
     @BeforeEach
     public void initTarget() {
-        calculator = new LoanCalculator();
+        calculator = new LoanAmortizationCalculatorImpl();
     }
 
     @Test
