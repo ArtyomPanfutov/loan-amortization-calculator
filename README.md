@@ -57,7 +57,8 @@ Usage example:
 
 ```
 
-Deployed only to github repository
+Deployed only to github repository. 
+
 Example of maven profile configuration:
 ```xml
   <profile>
