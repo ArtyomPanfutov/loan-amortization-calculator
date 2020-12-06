@@ -21,7 +21,7 @@ Usage example:
                 .term(32)                              // Loan term in MONTHS
                 .build();
                 
-        LoanCalculator calculator = new LoanCalculator();
+        LoanAmortizationCalculator calculator = new LoanAmortizationCalculatorImpl();
         LoanAmortization amortization = calculator.calculate(loan);
 
 ```
@@ -51,8 +51,8 @@ Usage example:
                 .earlyPayments(earlyPayments)             // Additional payments
                 .term(10)                                 // Loan term in MONTHS
                 .build();
-
-        LoanCalculator calculator = new LoanCalculator();
+                
+        LoanAmortizationCalculator calculator = new LoanAmortizationCalculatorImpl();
         LoanAmortization amortization = calculator.calculate(loan);
 
 ```
