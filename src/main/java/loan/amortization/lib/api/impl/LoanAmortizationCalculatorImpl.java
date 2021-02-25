@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author Artyom Panfutov
  */
 public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
-    private static final Logger logger = LogManager.getLogger(LoanAmortizationCalculatorImpl.class);
+    private static final Logger LOGGER = LogManager.getLogger(LoanAmortizationCalculatorImpl.class);
     private static final LoanAmortizationCalculator ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR = new AnnualPaymentLoanCalculator();
 
     /**
@@ -66,7 +66,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                     );
         }
 
-        logger.info("After applying repeating strategy: " + allEarlyPayments);
+        LOGGER.info("After applying repeating strategy: " + allEarlyPayments);
         return Loan.builder()
                 .amount(loan.getAmount())
                 .earlyPayments(allEarlyPayments)
@@ -77,7 +77,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
     }
 
     private void validate(Loan loan) {
-        logger.info("Validating input. Loan: " + loan);
+        LOGGER.info("Validating input. Loan: " + loan);
 
         if (loan == null || loan.getAmount() == null || loan.getRate() == null || loan.getTerm() == null) {
             throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.NULL.getMessageText());
@@ -107,7 +107,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                 }
             }
         }
-        logger.info("Successful validation!");
+        LOGGER.info("Successful validation!");
     }
 
 

@@ -20,7 +20,7 @@ import java.util.Map;
  * @author Artyom Panfutov
  */
 class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
-    private static final Logger logger = LogManager.getLogger(AnnualPaymentLoanCalculator.class);
+    private static final Logger LOGGER = LogManager.getLogger(AnnualPaymentLoanCalculator.class);
 
     @Override
     public LoanAmortization calculate(Loan loan) {
@@ -32,7 +32,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
         BigDecimal monthlyInterestRate = loan.getRate()
                 .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
                 .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
-        logger.info("Calculated monthly interest rate: {}", monthlyInterestRate);
+        LOGGER.info("Calculated monthly interest rate: {}", monthlyInterestRate);
 
         int term = loan.getTerm();
         BigDecimal monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, term);
@@ -121,7 +121,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
                 .earlyPayments(earlyPayments)
                 .build();
 
-        logger.info("Calculation result: " + result);
+        LOGGER.info("Calculation result: " + result);
 
         return result;
     }
@@ -140,7 +140,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
         try {
             paymentDate = nextMonth.withDayOfMonth(firstPaymentDate.getDayOfMonth());
         } catch (DateTimeException e) {
-            logger.trace("Cannot construct next payment date with the requested day of month. The last month day will be used instead.");
+            LOGGER.trace("Cannot construct next payment date with the requested day of month. The last month day will be used instead.");
             paymentDate = nextMonth.withDayOfMonth(nextMonth.lengthOfMonth());
         }
         return paymentDate;
@@ -169,7 +169,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
             }
         }
         totalAmount = loanBalance.add(totalAmount);
-        logger.info("Calculating total amount of early payments(decrease term strategy) with remaining loan balance:{}, until payment number: {}\n Result: {}",
+        LOGGER.info("Calculating total amount of early payments(decrease term strategy) with remaining loan balance:{}, until payment number: {}\n Result: {}",
                 loanBalance, untilThisPayment, totalAmount);
 
         return totalAmount;
@@ -185,7 +185,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
      * @return monthly payment amount
      */
     private BigDecimal getMonthlyPaymentAmount(BigDecimal amount, BigDecimal rate, Integer term) {
-        logger.info("Calculating monthly payment amount for: {}, {}, {}", amount, rate, term);
+        LOGGER.info("Calculating monthly payment amount for: {}, {}, {}", amount, rate, term);
 
         BigDecimal monthlyPaymentAmount = getInterestAmountByBalanceAndMonthlyInterestRate(
                 amount,
@@ -193,7 +193,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
                         .divide((BigDecimal.ONE.add(rate).pow(term).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
         );
 
-        logger.info("Calculate monthly payment amount: " + amount);
+        LOGGER.info("Calculate monthly payment amount: " + amount);
         return monthlyPaymentAmount;
     }
 

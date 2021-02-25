@@ -37,7 +37,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     TO_END {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
-            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
+            LOGGER.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
             return repeat(
                         earlyPayment,             // source
@@ -55,7 +55,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     TO_CERTAIN_MONTH {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
-            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
+            LOGGER.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
 
             int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
 
@@ -67,7 +67,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
         }
     };
 
-    private static final Logger logger = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
+    private static final Logger LOGGER = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
 
     /**
      * Copies early payment withing this range
