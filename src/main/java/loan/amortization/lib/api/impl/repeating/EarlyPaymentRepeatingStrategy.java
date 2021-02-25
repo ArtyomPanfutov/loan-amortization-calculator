@@ -37,7 +37,7 @@ public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
         public void fillEarlyPayments(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int startNumber, EarlyPayment earlyPayment) {
             logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
-            allEarlyPayments.putAll(bulkCopy(
+            allEarlyPayments.putAll(getRepeated(
                     earlyPayment,             // source
                     startNumber,              // from number
                     loan.getTerm()            // to number
@@ -57,7 +57,7 @@ public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
 
             int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
 
-            allEarlyPayments.putAll(bulkCopy(
+            allEarlyPayments.putAll(getRepeated(
                     earlyPayment,              // source
                     startNumber,               // from number
                     repeatTo                   // to number
@@ -74,7 +74,7 @@ public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
      * @param fromPayment number of the payment from which to start copying
      * @param toPayment number of the payment to stop copying
      */
-    Map<Integer, EarlyPayment> bulkCopy(EarlyPayment earlyPayment, int fromPayment, int toPayment) {
+    Map<Integer, EarlyPayment> getRepeated(EarlyPayment earlyPayment, int fromPayment, int toPayment) {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         for (int i = fromPayment; i < toPayment; i++) {
