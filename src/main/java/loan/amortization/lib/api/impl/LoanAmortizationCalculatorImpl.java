@@ -46,7 +46,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
      * Iterates through early payments entries and implements first found repeating strategy
      * @return new loan with filled early payment list (according to a repeating strategy)
      */
-    private Loan getLoanWithImplementedEarlyPaymentStrategy(final Loan loan) {
+    private Loan getLoanWithImplementedEarlyPaymentStrategy(Loan loan) {
         final Map<Integer, EarlyPayment> allEarlyPayments = new HashMap<>();
 
         if (loan.getEarlyPayments() != null) {
@@ -59,11 +59,12 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                     .findFirst()
                     // If there are more than one early payments with repeating strategy - we ignore them
                     // This case cannot be supported because it is contradictory - such payments could intersect with each other
-                    .ifPresent(p -> p.getValue()
-                            .getRepeatingStrategy()
-                            .fillEarlyPayments(allEarlyPayments, loan, p.getKey(), p.getValue()));
+                    .ifPresent(p -> allEarlyPayments.putAll(
+                            p.getValue().getRepeatingStrategy()
+                                    .repeat(loan, p.getKey(), p.getValue())
+                            )
+                    );
         }
-
 
         logger.info("After applying repeating strategy: " + allEarlyPayments);
         return Loan.builder()

@@ -7,6 +7,7 @@ import loan.amortization.lib.dto.Loan;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,8 +24,9 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     @JsonProperty("single")
     SINGLE {
         @Override
-        public void fillEarlyPayments(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int startNumber, EarlyPayment earlyPayment) {
+        public Map<Integer, EarlyPayment> repeat(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
             // This strategy must not repeat payments. It is the default strategy for all early payments
+            return Collections.emptyMap();
         }
     },
 
@@ -34,14 +36,14 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     @JsonProperty("to_end")
     TO_END {
         @Override
-        public void fillEarlyPayments(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int startNumber, EarlyPayment earlyPayment) {
+        public Map<Integer, EarlyPayment> repeat(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
             logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
-            allEarlyPayments.putAll(getRepeated(
-                    earlyPayment,             // source
-                    startNumber,              // from number
-                    loan.getTerm()            // to number
-            ));
+            return getRepeated(
+                        earlyPayment,             // source
+                        startNumber,              // from number
+                        loan.getTerm()            // to number
+            );
 
         }
     },
@@ -52,20 +54,20 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     @JsonProperty("to_certain_month")
     TO_CERTAIN_MONTH {
         @Override
-        public void fillEarlyPayments(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int startNumber, EarlyPayment earlyPayment) {
+        public Map<Integer, EarlyPayment> repeat(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
             logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
 
             int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
 
-            allEarlyPayments.putAll(getRepeated(
-                    earlyPayment,              // source
-                    startNumber,               // from number
-                    repeatTo                   // to number
-            ));
+            return getRepeated(
+                        earlyPayment,              // source
+                        startNumber,               // from number
+                        repeatTo                   // to number
+            );
         }
     };
 
-    private static Logger logger = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
+    private static final Logger logger = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
 
     /**
      * Copies early payment withing this range
