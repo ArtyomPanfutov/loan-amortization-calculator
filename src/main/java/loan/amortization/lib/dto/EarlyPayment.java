@@ -1,5 +1,7 @@
 package loan.amortization.lib.dto;
 
+import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
+
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;

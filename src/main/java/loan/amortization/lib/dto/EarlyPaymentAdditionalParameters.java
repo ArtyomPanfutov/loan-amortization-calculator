@@ -1,6 +1,7 @@
 package loan.amortization.lib.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 
 import java.io.Serializable;
 
