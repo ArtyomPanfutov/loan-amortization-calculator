@@ -5,7 +5,7 @@ import loan.amortization.lib.dto.Loan;
 
 import java.util.Map;
 
-interface EarlyPaymentRepeater {
+interface RepeatableEarlyPayment {
     /**
      *
      * @param allEarlyPayments destination map for fill
