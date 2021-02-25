@@ -28,8 +28,6 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
     /**
      * Calculates annual loan amortization schedule
      *
-     * @param inputLoan Loan attributes
-     *
      * @return Calculated loan amortization schedule {@link LoanAmortization}
      */
     @Override
@@ -45,9 +43,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
      * Implements early payment repeating strategy
      *
      * Iterates through early payments entries and implements first found repeating strategy
-     * @param loan
-     *
-     * @return new loan with filled early payment list (according to repeating strategy)
+     * @return new loan with filled early payment list (according to a repeating strategy)
      */
     private Loan getLoanWithImplementedEarlyPaymentStrategy(Loan loan) {
         Map<Integer, EarlyPayment> allEarlyPayments = new HashMap<>();
@@ -102,13 +98,6 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
         }
     }
 
-
-    /**
-     * Validates loan attributes
-     *
-     * @param loan loan attributes
-     * @throws LoanAmortizationCalculatorException
-     */
     private void validate(Loan loan) {
         logger.info("Validating input. Loan: " + loan);
 
