@@ -28,17 +28,17 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
     /**
      * Calculates annual loan amortization schedule
      *
-     * @param loan Loan attributes
+     * @param inputLoan Loan attributes
      *
      * @return Calculated loan amortization schedule {@link LoanAmortization}
      */
     @Override
-    public LoanAmortization calculate(Loan loan) {
-        validate(loan);
+    public LoanAmortization calculate(Loan inputLoan) {
+        validate(inputLoan);
 
-        loan = getLoanWithImplementedEarlyPaymentStrategy(loan);
-
-        return ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR.calculate(loan);
+        return ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR.calculate(
+                getLoanWithImplementedEarlyPaymentStrategy(inputLoan)
+        );
     }
 
     /**
