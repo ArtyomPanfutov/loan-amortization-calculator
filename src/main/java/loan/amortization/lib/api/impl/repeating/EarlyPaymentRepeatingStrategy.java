@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Artyom Panfutov
  */
-public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
+public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
 
     /**
      * Single payment, without repeating
