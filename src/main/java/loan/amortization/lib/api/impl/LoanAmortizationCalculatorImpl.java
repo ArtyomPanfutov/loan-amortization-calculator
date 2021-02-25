@@ -57,7 +57,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
             payments.stream()
                     .filter(p -> p.getValue().getRepeatingStrategy() != EarlyPaymentRepeatingStrategy.SINGLE)
                     .findFirst()
-                    // If there are more than one early payments with repeating strategy - we just ignore them
+                    // If there are more than one early payments with repeating strategy - we ignore them
                     // This case cannot be supported because it is contradictory - such payments could intersect with each other
                     .ifPresent(p -> p.getValue()
                             .getRepeatingStrategy()
