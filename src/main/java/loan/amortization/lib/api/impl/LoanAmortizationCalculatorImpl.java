@@ -61,7 +61,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                     // This case cannot be supported because it is contradictory - such payments could intersect with each other
                     .ifPresent(p -> allEarlyPayments.putAll(
                             p.getValue().getRepeatingStrategy()
-                                    .repeat(loan, p.getKey(), p.getValue())
+                                    .getRepeated(loan, p.getKey(), p.getValue())
                             )
                     );
         }
