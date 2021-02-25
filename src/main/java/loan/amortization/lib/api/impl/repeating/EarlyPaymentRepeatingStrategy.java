@@ -24,7 +24,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     @JsonProperty("single")
     SINGLE {
         @Override
-        public Map<Integer, EarlyPayment> repeat(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
+        public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
             // This strategy must not repeat payments. It is the default strategy for all early payments
             return Collections.emptyMap();
         }
@@ -36,10 +36,10 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     @JsonProperty("to_end")
     TO_END {
         @Override
-        public Map<Integer, EarlyPayment> repeat(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
+        public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
             logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
-            return getRepeated(
+            return repeat(
                         earlyPayment,             // source
                         startNumber,              // from number
                         loan.getTerm()            // to number
@@ -54,12 +54,12 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     @JsonProperty("to_certain_month")
     TO_CERTAIN_MONTH {
         @Override
-        public Map<Integer, EarlyPayment> repeat(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
+        public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
             logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
 
             int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
 
-            return getRepeated(
+            return repeat(
                         earlyPayment,              // source
                         startNumber,               // from number
                         repeatTo                   // to number
@@ -76,7 +76,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
      * @param fromPayment number of the payment from which to start copying
      * @param toPayment number of the payment to stop copying
      */
-    Map<Integer, EarlyPayment> getRepeated(EarlyPayment earlyPayment, int fromPayment, int toPayment) {
+    Map<Integer, EarlyPayment> repeat(EarlyPayment earlyPayment, int fromPayment, int toPayment) {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         for (int i = fromPayment; i < toPayment; i++) {
