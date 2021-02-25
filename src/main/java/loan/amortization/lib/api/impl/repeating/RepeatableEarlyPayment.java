@@ -7,11 +7,11 @@ import java.util.Map;
 
 interface RepeatableEarlyPayment {
     /**
+     * Copies early payment
      *
-     * @param allEarlyPayments destination map for fill
      * @param loan loan
-     * @param startNumber the number of the early payment from which start to fill
+     * @param startNumber the number of the early payment from which will be the first
      * @param earlyPayment source payment to copy
      */
-    void fillEarlyPayments(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int startNumber, EarlyPayment earlyPayment);
+    Map<Integer, EarlyPayment> repeat(final Loan loan, final int startNumber, final EarlyPayment earlyPayment);
 }
