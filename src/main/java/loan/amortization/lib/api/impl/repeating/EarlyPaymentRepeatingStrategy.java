@@ -4,17 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import loan.amortization.lib.dto.EarlyPayment;
 import loan.amortization.lib.dto.EarlyPaymentAdditionalParameters;
 import loan.amortization.lib.dto.Loan;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents strategies for repeating early payments
+ * Represents strategies with implementation for repeating early payments
  *
  * @author Artyom Panfutov
  */
 public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
-//    private static final Logger logger = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
 
     /**
      * Single payment, without repeating
@@ -34,7 +35,7 @@ public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
     TO_END {
         @Override
         public void fillEarlyPayments(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int startNumber, EarlyPayment earlyPayment) {
-//            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
+            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
 
             allEarlyPayments.putAll(bulkCopy(
                     earlyPayment,             // source
@@ -46,13 +47,13 @@ public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
     },
 
     /**
-     * Repeats early payment to specified month number
+     * Repeats early payment to the specified month number
      */
     @JsonProperty("to_certain_month")
     TO_CERTAIN_MONTH {
         @Override
         public void fillEarlyPayments(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int startNumber, EarlyPayment earlyPayment) {
-//            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
+            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
 
             int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
 
@@ -64,6 +65,7 @@ public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
         }
     };
 
+    private static Logger logger = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
 
     /**
      * Copies early payment withing this range
@@ -86,6 +88,5 @@ public enum EarlyPaymentRepeatingStrategy implements EarlyPaymentRepeater {
 
         return earlyPayments;
     }
-
 
 }
