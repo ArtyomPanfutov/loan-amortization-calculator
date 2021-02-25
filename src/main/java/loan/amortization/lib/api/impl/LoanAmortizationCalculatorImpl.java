@@ -2,6 +2,7 @@ package loan.amortization.lib.api.impl;
 
 import loan.amortization.lib.api.LoanAmortizationCalculator;
 import loan.amortization.lib.api.impl.message.Messages;
+import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import loan.amortization.lib.dto.*;
 import loan.amortization.lib.exception.ExceptionType;
 import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
@@ -45,24 +46,22 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
      * Iterates through early payments entries and implements first found repeating strategy
      * @return new loan with filled early payment list (according to a repeating strategy)
      */
-    private Loan getLoanWithImplementedEarlyPaymentStrategy(Loan loan) {
-        Map<Integer, EarlyPayment> allEarlyPayments = new HashMap<>();
+    private Loan getLoanWithImplementedEarlyPaymentStrategy(final Loan loan) {
+        final Map<Integer, EarlyPayment> allEarlyPayments = new HashMap<>();
 
         if (loan.getEarlyPayments() != null) {
-            Set<Map.Entry<Integer, EarlyPayment>> payments = loan.getEarlyPayments().entrySet();
+            final Set<Map.Entry<Integer, EarlyPayment>> payments = loan.getEarlyPayments().entrySet();
 
             allEarlyPayments.putAll(extractOnlySingleEarlyPayments(loan));
 
-            for (Map.Entry<Integer, EarlyPayment> entry : payments) {
-                EarlyPayment earlyPayment = entry.getValue();
-
-                fillEarlyPaymentsAccordingToRepeatingStrategy(allEarlyPayments, loan, entry.getKey(), earlyPayment);
-
-                // Strategy implemented - stop the cycle
-                // If there are more than one early payments with repeating strategy - we just ignore them (todo log this)
-                // This case cannot be supported because it is contradictory - such payments could intersect with each other
-                break;
-            }
+            payments.stream()
+                    .filter(p -> p.getValue().getRepeatingStrategy() != EarlyPaymentRepeatingStrategy.SINGLE)
+                    .findFirst()
+                    // If there are more than one early payments with repeating strategy - we just ignore them
+                    // This case cannot be supported because it is contradictory - such payments could intersect with each other
+                    .ifPresent(p -> p.getValue()
+                            .getRepeatingStrategy()
+                            .fillEarlyPayments(allEarlyPayments, loan, p.getKey(), p.getValue()));
         }
 
 
@@ -74,30 +73,6 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                 .term(loan.getTerm())
                 .firstPaymentDate(loan.getFirstPaymentDate())
                 .build();
-    }
-
-    private void fillEarlyPaymentsAccordingToRepeatingStrategy(Map<Integer, EarlyPayment> allEarlyPayments, Loan loan, int firstEarlyPaymentNumber, EarlyPayment earlyPayment) {
-        if (earlyPayment.getRepeatingStrategy() == EarlyPaymentRepeatingStrategy.TO_END) {
-            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
-
-            allEarlyPayments.putAll(
-                    repeatEarlyPayment(
-                            earlyPayment,             // source
-                            firstEarlyPaymentNumber,  // from number
-                            loan.getTerm()            // to number
-            ));
-
-        } else if (earlyPayment.getRepeatingStrategy() == EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH) {
-            logger.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
-
-            int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
-
-            allEarlyPayments.putAll(repeatEarlyPayment(
-                    earlyPayment,              // source
-                    firstEarlyPaymentNumber,   // from number
-                    repeatTo                   // to number
-            ));
-        }
     }
 
     private void validate(Loan loan) {
@@ -134,27 +109,6 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
         logger.info("Successful validation!");
     }
 
-    /**
-     * Copies early payment withing this range
-     *
-     * @param earlyPayment source payment to copy
-     * @param fromPayment number of the payment from which to start copying
-     * @param toPayment number of the payment to stop copying
-     */
-    private Map<Integer, EarlyPayment> repeatEarlyPayment(EarlyPayment earlyPayment, int fromPayment, int toPayment) {
-        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
-
-        for (int i = fromPayment; i < toPayment; i++) {
-            earlyPayments.put(i, new EarlyPayment(
-                    earlyPayment.getAmount(),
-                    earlyPayment.getStrategy(),
-                    EarlyPaymentRepeatingStrategy.SINGLE,
-                    null
-            ));
-        }
-
-        return earlyPayments;
-    }
 
     private Map<Integer, EarlyPayment> extractOnlySingleEarlyPayments(Loan loan) {
         return loan.getEarlyPayments().entrySet().stream()
