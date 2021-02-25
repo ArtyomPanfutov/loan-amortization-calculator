@@ -59,6 +59,8 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                 fillEarlyPaymentsAccordingToRepeatingStrategy(allEarlyPayments, loan, entry.getKey(), earlyPayment);
 
                 // Strategy implemented - stop the cycle
+                // If there are more than one early payments with repeating strategy - we just ignore them (todo log this)
+                // This case cannot be supported because it is contradictory - such payments could intersect with each other
                 break;
             }
         }
