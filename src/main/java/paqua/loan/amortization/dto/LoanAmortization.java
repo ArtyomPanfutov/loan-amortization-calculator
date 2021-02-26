@@ -1,4 +1,4 @@
-package loan.amortization.lib.dto;
+package paqua.loan.amortization.dto;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;

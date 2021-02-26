@@ -1,9 +1,9 @@
-package loan.amortization.lib.api.impl.repeating;
+package paqua.loan.amortization.api.impl.repeating;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import loan.amortization.lib.dto.EarlyPayment;
-import loan.amortization.lib.dto.EarlyPaymentAdditionalParameters;
-import loan.amortization.lib.dto.Loan;
+import paqua.loan.amortization.dto.EarlyPayment;
+import paqua.loan.amortization.dto.EarlyPaymentAdditionalParameters;
+import paqua.loan.amortization.dto.Loan;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

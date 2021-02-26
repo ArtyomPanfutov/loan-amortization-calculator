@@ -1,4 +1,4 @@
-package loan.amortization.lib.dto;
+package paqua.loan.amortization.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

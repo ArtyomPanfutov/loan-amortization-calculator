@@ -1,7 +1,7 @@
-package loan.amortization.lib.dto;
+package paqua.loan.amortization.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
+import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 
 import java.io.Serializable;
 

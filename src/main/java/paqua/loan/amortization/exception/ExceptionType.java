@@ -1,4 +1,4 @@
-package loan.amortization.lib.exception;
+package paqua.loan.amortization.exception;
 
 /**
  * Contains all possible types of exceptions for this lib

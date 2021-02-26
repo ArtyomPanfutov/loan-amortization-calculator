@@ -1,4 +1,4 @@
-package loan.amortization.lib.exception;
+package paqua.loan.amortization.exception;
 
 /**
  * Custom runtime exception for this lib

@@ -1,13 +1,16 @@
-package loan.amortization.lib.api.impl;
+package paqua.loan.amortization.api.impl;
 
-import loan.amortization.lib.api.LoanAmortizationCalculator;
-import loan.amortization.lib.api.impl.message.Messages;
-import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
-import loan.amortization.lib.dto.*;
-import loan.amortization.lib.exception.ExceptionType;
-import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
+import paqua.loan.amortization.api.LoanAmortizationCalculator;
+import paqua.loan.amortization.api.impl.annual.AnnualPaymentLoanCalculator;
+import paqua.loan.amortization.api.impl.message.Messages;
+import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
+import paqua.loan.amortization.exception.ExceptionType;
+import paqua.loan.amortization.exception.LoanAmortizationCalculatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import paqua.loan.amortization.dto.EarlyPayment;
+import paqua.loan.amortization.dto.Loan;
+import paqua.loan.amortization.dto.LoanAmortization;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
