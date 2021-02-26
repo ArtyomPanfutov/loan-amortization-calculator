@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implementation of annual payment loan amortization calculator
+ * Implementation of the annual payment loan amortization calculator
  *
  * @author Artyom Panfutov
  */
@@ -29,16 +29,13 @@ public class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
         Map<Integer, EarlyPayment> earlyPayments = loan.getEarlyPayments() != null ? loan.getEarlyPayments() : Collections.EMPTY_MAP;
         BigDecimal loanBalance = loan.getAmount();
 
-        BigDecimal monthlyInterestRate = loan.getRate()
-                .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
-                .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
-        LOGGER.info("Calculated monthly interest rate: {}", monthlyInterestRate);
-
         int term = loan.getTerm();
+
+        BigDecimal monthlyInterestRate = getMonthlyInterestRate(loan.getRate());
         BigDecimal monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, term);
 
-        LoanAmortization.LoanAmortizationBuilder amortizationBuilder = LoanAmortization.builder();
-        amortizationBuilder.monthlyPaymentAmount(monthlyPaymentAmount);
+        LoanAmortization.LoanAmortizationBuilder amortizationBuilder = LoanAmortization.builder()
+                .monthlyPaymentAmount(monthlyPaymentAmount);
 
         LocalDate paymentDate = loan.getFirstPaymentDate();
 
@@ -124,6 +121,15 @@ public class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
         LOGGER.info("Calculation result: " + result);
 
         return result;
+    }
+
+    private BigDecimal getMonthlyInterestRate(BigDecimal rate) {
+        BigDecimal monthlyInterestRate = rate
+                .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
+                .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
+
+        LOGGER.info("Calculated monthly interest rate: {}", monthlyInterestRate);
+        return monthlyInterestRate;
     }
 
     /**
