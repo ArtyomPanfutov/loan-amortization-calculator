@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents early pay off of the loan
+ * Represents an early pay off of the loan
  */
 public class EarlyPayment implements Serializable {
     private static final long serialVersionUID = -4828623603301324540L;

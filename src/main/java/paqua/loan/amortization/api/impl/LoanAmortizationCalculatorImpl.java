@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Implementation of loan amortization calculator
  *
- * Calculates ANNUAL amortization schedule
+ * Calculates annual amortization schedule
  *
  * @author Artyom Panfutov
  */
@@ -44,7 +44,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
     }
 
     /**
-     * Implements early payment repeating strategy
+     * Implements the first found early payment repeating strategy
      *
      * Iterates through early payments entries and implements first found repeating strategy
      * @return new loan with filled early payment list (according to a repeating strategy)
