@@ -57,7 +57,7 @@ Usage example:
 
 ```
 
-Deployed only to github repository. 
+<b>The library is deployed only to the GitHub repository</b> https://maven.pkg.github.com/ArtyomPanfutov/loan-amortization-calculator. 
 
 Example of maven profile configuration:
 ```xml
