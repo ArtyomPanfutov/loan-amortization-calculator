@@ -1,7 +1,7 @@
-package loan.amortization.lib.api.impl.repeating;
+package paqua.loan.amortization.api.impl.repeating;
 
-import loan.amortization.lib.dto.EarlyPayment;
-import loan.amortization.lib.dto.Loan;
+import paqua.loan.amortization.dto.EarlyPayment;
+import paqua.loan.amortization.dto.Loan;
 
 import java.util.Map;
 

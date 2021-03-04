@@ -1,4 +1,4 @@
-package loan.amortization.lib.api.impl.message;
+package paqua.loan.amortization.api.impl.message;
 
 /**
  * Messages for exceptions

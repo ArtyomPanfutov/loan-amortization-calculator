@@ -1,14 +1,14 @@
-package loan.amortization.lib.impl;
+package paqua.loan.amortization.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import loan.amortization.lib.api.LoanAmortizationCalculator;
-import loan.amortization.lib.api.impl.LoanAmortizationCalculatorImpl;
-import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
-import loan.amortization.lib.dto.*;
-import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
+import paqua.loan.amortization.api.LoanAmortizationCalculator;
+import paqua.loan.amortization.api.impl.LoanAmortizationCalculatorImpl;
+import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
+import paqua.loan.amortization.exception.LoanAmortizationCalculatorException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import paqua.loan.amortization.dto.*;
 
 import java.io.File;
 import java.io.IOException;

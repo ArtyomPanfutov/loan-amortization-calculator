@@ -1,6 +1,6 @@
-package loan.amortization.lib.dto;
+package paqua.loan.amortization.dto;
 
-import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
+import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents early pay off of the loan
+ * Represents an early pay off of the loan
  */
 public class EarlyPayment implements Serializable {
     private static final long serialVersionUID = -4828623603301324540L;

@@ -1,7 +1,7 @@
-package loan.amortization.lib.api;
+package paqua.loan.amortization.api;
 
-import loan.amortization.lib.dto.Loan;
-import loan.amortization.lib.dto.LoanAmortization;
+import paqua.loan.amortization.dto.Loan;
+import paqua.loan.amortization.dto.LoanAmortization;
 
 /**
  * Loan amortization calculator

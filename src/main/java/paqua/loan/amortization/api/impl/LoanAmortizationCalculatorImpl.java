@@ -1,13 +1,16 @@
-package loan.amortization.lib.api.impl;
+package paqua.loan.amortization.api.impl;
 
-import loan.amortization.lib.api.LoanAmortizationCalculator;
-import loan.amortization.lib.api.impl.message.Messages;
-import loan.amortization.lib.api.impl.repeating.EarlyPaymentRepeatingStrategy;
-import loan.amortization.lib.dto.*;
-import loan.amortization.lib.exception.ExceptionType;
-import loan.amortization.lib.exception.LoanAmortizationCalculatorException;
+import paqua.loan.amortization.api.LoanAmortizationCalculator;
+import paqua.loan.amortization.api.impl.annual.AnnualPaymentLoanCalculator;
+import paqua.loan.amortization.api.impl.message.Messages;
+import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
+import paqua.loan.amortization.exception.ExceptionType;
+import paqua.loan.amortization.exception.LoanAmortizationCalculatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import paqua.loan.amortization.dto.EarlyPayment;
+import paqua.loan.amortization.dto.Loan;
+import paqua.loan.amortization.dto.LoanAmortization;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -18,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Implementation of loan amortization calculator
  *
- * Calculates ANNUAL amortization schedule
+ * Calculates annual amortization schedule
  *
  * @author Artyom Panfutov
  */
@@ -41,7 +44,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
     }
 
     /**
-     * Implements early payment repeating strategy
+     * Implements the first found early payment repeating strategy
      *
      * Iterates through early payments entries and implements first found repeating strategy
      * @return new loan with filled early payment list (according to a repeating strategy)
