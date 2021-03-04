@@ -6,7 +6,7 @@
 <dependency>
   <groupId>paqua</groupId>
   <artifactId>loan-amortization-calculator</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -57,7 +57,7 @@ Usage example:
 
 ```
 
-Deployed only to github repository. 
+<b>The library is deployed only to the GitHub repository</b> https://maven.pkg.github.com/ArtyomPanfutov/loan-amortization-calculator. 
 
 Example of maven profile configuration:
 ```xml
