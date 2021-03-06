@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-package paqua.loan.amortization.impl;
+package paqua.loan.amortization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Artyom Panfutov
  */
-public class LoanLoanAmortizationCalculatorTest {
+public class LoanAmortizationCalculatorTest {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private LoanAmortizationCalculator calculator;
 
