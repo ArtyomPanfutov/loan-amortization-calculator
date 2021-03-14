@@ -13,7 +13,7 @@
 
 Usage example:
 
-1. Regular loan without additional payments
+1. A Regular loan without any additional payments
 ```java
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32)) // Debt amount
@@ -25,10 +25,10 @@ Usage example:
         LoanAmortization amortization = calculator.calculate(loan);
 
 ```
-2. Loan with different kinds of addtitional payments 
+2. A loan with different kinds of addtitional payments 
 ```java
 
-        // Key - payment number in loan amortization schedule(starts with 0)
+        // Key - payment number in a loan amortization schedule(starts with 0)
         // Value - additional payment attributes
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
         
