@@ -4,11 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import paqua.loan.amortization.utils.factory.EarlyPaymentFactory;
+import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class EarlyPaymentTest {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.create();
 
     @Test
     void shouldMatchSerializedAndDeserializedObjects() throws JsonProcessingException {
