@@ -81,3 +81,4 @@ Example of maven profile configuration:
 
 ### Contribution to the project
 If you want to contribute - see [CONTRIBUTING.md](CONTRIBUTING.md)
+Pull requests are welcome! 
