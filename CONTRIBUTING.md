@@ -14,3 +14,13 @@ Explain the problem and include additional details to help maintainers reproduce
   * Provide specific examples to demonstrate the steps. Include links to files or GitHub projects, or copy/pasteable snippets, which you use in those examples. 
   * Describe the behavior you observed after following the steps and point out what exactly is the problem with that behavior.
   * Explain which behavior you expected to see instead and why.
+
+## How Do I contribute to the project?
+   * First, try to find an existing issue in the GitHub issues. If it does not exist - create a new one.
+   * Describe your feature in detail. Try to think about edge cases and restrictions.
+   * If you found an existing issue and no one working on it - write a comment that you want to implement this.
+   * If you are ready to make a change - fork the repository!
+   * Create a branch in the forked repository.
+   * Implement the feature / fix the bug. Make sure that all the tests pass. Write new tests if it is necessary.
+   * Document the changes.
+   * Open a pull request to the master branch.
