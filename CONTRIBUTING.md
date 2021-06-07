@@ -1,4 +1,4 @@
-# Contributing to Loan Amortization Calculator Library
+# Contributing to the Loan Amortization Calculator Library
 
 👍🎉 First off, thanks for taking the time to contribute! 🎉👍
 
