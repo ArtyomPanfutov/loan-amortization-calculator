@@ -22,22 +22,27 @@
  * SOFTWARE.
  *
  */
-package paqua.loan.amortization.utils.factory;
+package paqua.loan.amortization.dto;
 
-import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
-import paqua.loan.amortization.dto.EarlyPayment;
-import paqua.loan.amortization.dto.EarlyPaymentStrategy;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import paqua.loan.amortization.utils.factory.MonthlyPaymentFactory;
+import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 
-import java.math.BigDecimal;
-import java.util.Collections;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class EarlyPaymentFactory {
-    public static EarlyPayment createSingleWithDecreasePaymentAmountStrategy(double amount) {
-        return new EarlyPayment(
-                BigDecimal.valueOf(amount),
-                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
-                EarlyPaymentRepeatingStrategy.SINGLE,
-                Collections.emptyMap()
-        );
+class MonthlyPaymentTest {
+    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.create();
+
+    @Test
+    void shouldMatchSerializedAndDeserialized() throws JsonProcessingException {
+        MonthlyPayment monthlyPayment = MonthlyPaymentFactory.createDefault();
+
+        String serialized = OBJECT_MAPPER.writeValueAsString(monthlyPayment);
+        MonthlyPayment deserialized = OBJECT_MAPPER.readValue(serialized, MonthlyPayment.class);
+
+        assertEquals(deserialized, monthlyPayment);
+        assertEquals(deserialized.hashCode(), monthlyPayment.hashCode());
     }
 }
