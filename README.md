@@ -83,3 +83,6 @@ Example of maven profile configuration:
 If you want to contribute - see [CONTRIBUTING.md](CONTRIBUTING.md)
 
 Pull requests are welcome! 
+
+### License
+[MIT](LICENSE)
