@@ -23,4 +23,4 @@ Explain the problem and include additional details to help maintainers reproduce
    * Create a branch in the forked repository.
    * Implement the feature / fix the bug. Make sure that all the tests pass. Write new tests if it is necessary.
    * Document the changes.
-   * Open a pull request to the master branch.
+   * Open a pull request from the forked to the master branch.
