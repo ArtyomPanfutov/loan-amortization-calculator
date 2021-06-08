@@ -154,7 +154,7 @@ public final class Loan implements Serializable {
         }
 
         /**
-         * Dept amount (principal)
+         * Dept amount (principal) in BigDecimal
          *
          * @param amount loan amount
          * @return loan builder
@@ -164,16 +164,37 @@ public final class Loan implements Serializable {
             return this;
         }
 
-        /**
+		/**
+		 * Dept amount (principal) in double
+		 *
+		 * @param amount
+		 * @return
+		 */
+		public LoanBuilder amount(double amount) {
+			this.amount = BigDecimal.valueOf(amount);
+			return this;
+		}
+
+		/**
          * Interest rate
          *
-         * @param rate interest rate
+         * @param rate interest rate in BigDecimal
          * @return loan builder
          */
         public LoanBuilder rate(BigDecimal rate) {
             this.rate = rate;
             return this;
         }
+
+		/**
+		 * Interest rate in double
+		 * @param rate
+		 * @return
+		 */
+		public LoanBuilder rate(double rate) {
+			this.rate = BigDecimal.valueOf(rate);
+			return this;
+		}
 
         /**
          * Loan term in months

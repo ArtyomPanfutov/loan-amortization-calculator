@@ -347,4 +347,19 @@ class LoanAmortizationCalculatorTest {
         Assertions.assertThrows(LoanAmortizationCalculatorException.class, () ->
             calculator.calculate(new Loan(null, null, null, null, null)));
     }
+
+
+	@Test
+	public void shouldTakeDoubleValuesForLoan(){
+		Loan loan = Loan.builder()
+				.amount(500000.32)
+				.rate(4.56)
+				.term(10)
+				.build();
+		LoanAmortization amortization = calculator.calculate(loan);
+		assertNotNull(amortization);
+
+	}
+
+
 }
