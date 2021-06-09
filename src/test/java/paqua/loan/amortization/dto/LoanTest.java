@@ -24,6 +24,7 @@
  */
 package paqua.loan.amortization.dto;
 
+import java.math.BigDecimal;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -45,4 +46,19 @@ class LoanTest {
         assertEquals(deserialized, loan);
         assertEquals(deserialized.hashCode(), loan.hashCode());
     }
+
+	@Test
+	public void shouldTakeDoubleValuesForLoan(){
+		Loan loan = Loan.builder()
+				.amount(500000.32)
+				.rate(4.56)
+				.term(10)
+				.build();
+
+		assertEquals(loan.getAmount(), BigDecimal.valueOf(500000.32));
+		assertEquals(loan.getRate(), BigDecimal.valueOf(4.56));
+
+
+	}
+
 }

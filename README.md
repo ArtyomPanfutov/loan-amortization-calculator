@@ -78,3 +78,11 @@ Example of maven profile configuration:
       </repositories>
     </profile>
 ```
+
+### Contribution to the project
+If you want to contribute - see [CONTRIBUTING.md](CONTRIBUTING.md)
+
+Pull requests are welcome! 
+
+### License
+[MIT](LICENSE)
