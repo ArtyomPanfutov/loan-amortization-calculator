@@ -48,17 +48,18 @@ class LoanTest {
     }
 
 	@Test
-	public void shouldTakeDoubleValuesForLoan(){
+	void shouldTakeDoubleValuesForLoan(){
+		double amount = 500000.32;
+		double rate = 4.56;
+
 		Loan loan = Loan.builder()
-				.amount(500000.32)
-				.rate(4.56)
+				.amount(amount)
+				.rate(rate)
 				.term(10)
 				.build();
 
-		assertEquals(loan.getAmount(), BigDecimal.valueOf(500000.32));
-		assertEquals(loan.getRate(), BigDecimal.valueOf(4.56));
-
-
+		assertEquals(loan.getAmount(), BigDecimal.valueOf(amount));
+		assertEquals(loan.getRate(), BigDecimal.valueOf(rate));
 	}
 
 }
