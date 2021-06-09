@@ -347,4 +347,5 @@ class LoanAmortizationCalculatorTest {
         Assertions.assertThrows(LoanAmortizationCalculatorException.class, () ->
             calculator.calculate(new Loan(null, null, null, null, null)));
     }
+
 }
