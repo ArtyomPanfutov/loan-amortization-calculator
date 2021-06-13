@@ -1,0 +1,12 @@
+name: Run workflow on push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+    steps:
+      - name: Run the Maven verify phase
+          run: mvn --batch-mode --update-snapshots verify
