@@ -6,7 +6,12 @@ on:
   pull_request:
     branches:
       - main
-
-    steps:
-      - name: Run the Maven verify phase
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      
+      steps:
+        - name: Run the Maven verify phase
           run: mvn --batch-mode --update-snapshots verify
+
+
