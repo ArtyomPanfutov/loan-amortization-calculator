@@ -50,7 +50,7 @@ public class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
     public LoanAmortization calculate(Loan loan) {
         BigDecimal overPaidInterestAmount = BigDecimal.ZERO;
 
-        Map<Integer, EarlyPayment> earlyPayments = loan.getEarlyPayments() != null ? loan.getEarlyPayments() : Collections.EMPTY_MAP;
+        Map<Integer, EarlyPayment> earlyPayments = loan.getEarlyPayments() != null ? loan.getEarlyPayments() : Collections.emptyMap();
         BigDecimal loanBalance = loan.getAmount();
 
         int term = loan.getTerm();
@@ -223,7 +223,7 @@ public class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
                         .divide((BigDecimal.ONE.add(rate).pow(term).subtract(BigDecimal.ONE)), 15, RoundingMode.HALF_UP)
         );
 
-        LOGGER.info("Calculate monthly payment amount: " + amount);
+        LOGGER.info("Calculate monthly payment amount: {}", amount);
         return monthlyPaymentAmount;
     }
 

@@ -24,20 +24,26 @@
  */
 package paqua.loan.amortization.utils.factory;
 
-import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import paqua.loan.amortization.dto.EarlyPayment;
-import paqua.loan.amortization.dto.EarlyPaymentStrategy;
+import paqua.loan.amortization.dto.LoanAmortization;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-public class EarlyPaymentFactory {
-    public static EarlyPayment createSingleWithDecreasePaymentAmountStrategy(double amount) {
-        return new EarlyPayment(
-                BigDecimal.valueOf(amount),
-                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
-                EarlyPaymentRepeatingStrategy.SINGLE,
-                Collections.emptyMap()
-        );
+public class LoanAmortizationFactory {
+    public static LoanAmortization create() {
+        EarlyPayment earlyPayment = EarlyPaymentFactory.createSingleWithDecreasePaymentAmountStrategy(100.33);
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+
+        earlyPayments.put(1, earlyPayment);
+
+        return LoanAmortization.builder()
+                .earlyPayments(earlyPayments)
+                .monthlyPaymentAmount(BigDecimal.valueOf(100))
+                .overPaymentAmount(BigDecimal.valueOf(23))
+                .monthlyPayments(Collections.singletonList(MonthlyPaymentFactory.createDefault()))
+                .build();
     }
 }
