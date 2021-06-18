@@ -142,7 +142,7 @@ public class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
                 .earlyPayments(earlyPayments)
                 .build();
 
-        LOGGER.info("Calculation result: " + result);
+        LOGGER.info("Calculation result: {}", result);
 
         return result;
     }

@@ -42,7 +42,7 @@ class MonthlyPaymentTest {
         String serialized = OBJECT_MAPPER.writeValueAsString(monthlyPayment);
         MonthlyPayment deserialized = OBJECT_MAPPER.readValue(serialized, MonthlyPayment.class);
 
-        assertEquals(deserialized, monthlyPayment);
-        assertEquals(deserialized.hashCode(), monthlyPayment.hashCode());
+        assertEquals(monthlyPayment, deserialized);
+        assertEquals(monthlyPayment.hashCode(), deserialized.hashCode());
     }
 }

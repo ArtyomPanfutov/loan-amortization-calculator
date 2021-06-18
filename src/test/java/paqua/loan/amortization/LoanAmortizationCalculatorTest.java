@@ -25,14 +25,12 @@
 package paqua.loan.amortization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
 import paqua.loan.amortization.api.impl.LoanAmortizationCalculatorImpl;
 import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import paqua.loan.amortization.dto.*;
-import paqua.loan.amortization.exception.LoanAmortizationCalculatorException;
 import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 
 import java.io.File;
@@ -236,7 +234,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithOneEarlyPaymentAndTermDecreasingStrategy() throws IOException {
+    void shouldCalculateWithOneEarlyPaymentAndTermDecreasingStrategy() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         earlyPayments.put(5, new EarlyPayment(
@@ -261,7 +259,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithOneEarlyPaymentAndPaymentAmountDecreasingStrategy() throws IOException {
+    void shouldCalculateWithOneEarlyPaymentAndPaymentAmountDecreasingStrategy() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         earlyPayments.put(5, new EarlyPayment(
@@ -286,7 +284,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithAllKindsOfEarlyPayment() throws IOException {
+    void shouldCalculateWithAllKindsOfEarlyPayment() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         earlyPayments.put(0, new EarlyPayment(
@@ -333,19 +331,4 @@ class LoanAmortizationCalculatorTest {
 
         assertEquals(reference, amortization);
     }
-
-
-    @Test
-    void shouldFailWhenLoanIsNull() {
-        Assertions.assertThrows(LoanAmortizationCalculatorException.class, () -> 
-            calculator.calculate(null));
-
-    }
-    
-    @Test 
-    void shouldFailWhenLoanValuesAreNull() {
-        Assertions.assertThrows(LoanAmortizationCalculatorException.class, () ->
-            calculator.calculate(new Loan(null, null, null, null, null)));
-    }
-
 }

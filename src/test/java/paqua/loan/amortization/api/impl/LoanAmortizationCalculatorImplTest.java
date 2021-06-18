@@ -22,44 +22,44 @@
  * SOFTWARE.
  *
  */
-package paqua.loan.amortization.dto;
+package paqua.loan.amortization.api.impl;
 
-import java.math.BigDecimal;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import paqua.loan.amortization.api.LoanAmortizationCalculator;
+import paqua.loan.amortization.dto.Loan;
+import paqua.loan.amortization.dto.LoanAmortization;
+import paqua.loan.amortization.exception.LoanAmortizationCalculatorException;
 import paqua.loan.amortization.utils.factory.LoanFactory;
-import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class LoanTest {
-    private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.create();
+class LoanAmortizationCalculatorImplTest {
+    private LoanAmortizationCalculator calculator;
 
-    @Test
-    void shouldMatchSerializedAndDeserializedObjects() throws JsonProcessingException {
-        Loan loan = LoanFactory.createDefaultWithEarlyPayments();
-
-        String serialized = OBJECT_MAPPER.writeValueAsString(loan);
-        Loan deserialized = OBJECT_MAPPER.readValue(serialized, Loan.class);
-
-        assertEquals(loan, deserialized);
-        assertEquals(loan.hashCode(), deserialized.hashCode());
+    @BeforeEach
+    void initTarget() {
+        calculator = new LoanAmortizationCalculatorImpl();
     }
 
-	@Test
-	void shouldTakeDoubleValuesForLoan(){
-		double amount = 500000.32;
-		double rate = 4.56;
+    @Test
+    void shouldReturnNonNull() {
+        LoanAmortization amortization = calculator.calculate(LoanFactory.createDefaultWithEarlyPayments());
 
-		Loan loan = Loan.builder()
-				.amount(amount)
-				.rate(rate)
-				.term(10)
-				.build();
+        assertNotNull(amortization);
+    }
 
-		assertEquals(BigDecimal.valueOf(amount), loan.getAmount());
-		assertEquals(BigDecimal.valueOf(rate), loan.getRate());
-	}
+    @Test
+    void shouldFailWhenLoanIsNull() {
+        Assertions.assertThrows(LoanAmortizationCalculatorException.class, () ->
+                calculator.calculate(null));
 
+    }
+
+    @Test
+    void shouldFailWhenLoanValuesAreNull() {
+        Assertions.assertThrows(LoanAmortizationCalculatorException.class, () ->
+                calculator.calculate(new Loan(null, null, null, null, null)));
+    }
 }

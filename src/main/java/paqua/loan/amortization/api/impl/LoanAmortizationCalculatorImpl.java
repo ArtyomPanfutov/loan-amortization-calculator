@@ -93,7 +93,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
                     );
         }
 
-        LOGGER.info("After applying repeating strategy: " + allEarlyPayments);
+        LOGGER.info("After applying repeating strategy: {} ", allEarlyPayments);
         return Loan.builder()
                 .amount(loan.getAmount())
                 .earlyPayments(allEarlyPayments)
@@ -104,7 +104,7 @@ public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculato
     }
 
     private void validate(Loan loan) {
-        LOGGER.info("Validating input. Loan: " + loan);
+        LOGGER.info("Validating input. Loan:{} ", loan);
 
         if (loan == null || loan.getAmount() == null || loan.getRate() == null || loan.getTerm() == null) {
             throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.NULL.getMessageText());

@@ -42,8 +42,7 @@ class LoanAmortizationTest {
         String serialized = OBJECT_MAPPER.writeValueAsString(amortization);
         LoanAmortization deserialized = OBJECT_MAPPER.readValue(serialized, LoanAmortization.class);
 
-        assertEquals(deserialized, amortization);
-        assertEquals(deserialized.hashCode(), amortization.hashCode());
+        assertEquals(amortization, deserialized);
+        assertEquals(amortization.hashCode(), deserialized.hashCode());
     }
-
 }
