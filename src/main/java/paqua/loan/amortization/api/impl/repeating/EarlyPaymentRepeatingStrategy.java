@@ -25,11 +25,11 @@
 package paqua.loan.amortization.api.impl.repeating;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import paqua.loan.amortization.dto.EarlyPayment;
 import paqua.loan.amortization.dto.EarlyPaymentAdditionalParameters;
 import paqua.loan.amortization.dto.Loan;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -49,6 +49,8 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     SINGLE {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
+            log(earlyPayment, SINGLE);
+
             // This strategy must not repeat payments. It is the default strategy for all early payments
             return Collections.emptyMap();
         }
@@ -61,7 +63,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     TO_END {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
-            LOGGER.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_END + "\n Repeating the payment: " + earlyPayment);
+            log(earlyPayment, TO_END);
 
             return repeat(
                         earlyPayment,             // source
@@ -70,6 +72,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
             );
 
         }
+
     },
 
     /**
@@ -79,7 +82,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     TO_CERTAIN_MONTH {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
-            LOGGER.info("Repeating strategy " + EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH + "\n Repeating the payment: " + earlyPayment);
+            log(earlyPayment, EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH);
 
             int repeatTo = Integer.parseInt(earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
 
@@ -115,4 +118,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
         return earlyPayments;
     }
 
+    void log(EarlyPayment earlyPayment, EarlyPaymentRepeatingStrategy strategy) {
+        LOGGER.info("Repeating strategy {} \n Repeating the payment: {} ",  strategy, earlyPayment);
+    }
 }
