@@ -72,10 +72,6 @@ public final class LoanAmortization implements Serializable {
         this.earlyPayments = earlyPayments;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     /**
      * @return Amount of calculated monthly payment
      */
