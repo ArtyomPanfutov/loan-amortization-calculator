@@ -40,12 +40,19 @@ public class LoanFactory {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
         earlyPayments.put(3, EarlyPaymentFactory.createSingleWithDecreasePaymentAmountStrategy(2330.4));
 
+        return getBuilderWithDefaultLoan()
+                .earlyPayments(earlyPayments)
+                .build();
+    }
+
+    /**
+     * Get default loan builder w/o early payments
+     */
+    public static Loan.LoanBuilder getBuilderWithDefaultLoan() {
         return Loan.builder()
                 .amount(BigDecimal.valueOf(10000.00))
                 .rate(BigDecimal.valueOf(5.53))
                 .term(12)
-                .earlyPayments(earlyPayments)
-                .firstPaymentDate(LocalDate.now())
-                .build();
+                .firstPaymentDate(LocalDate.now());
     }
 }
