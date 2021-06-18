@@ -26,6 +26,7 @@ package paqua.loan.amortization.api.impl.repeating;
 
 import org.junit.jupiter.api.Test;
 import paqua.loan.amortization.dto.EarlyPayment;
+import paqua.loan.amortization.dto.EarlyPaymentAdditionalParameters;
 import paqua.loan.amortization.dto.EarlyPaymentStrategy;
 import paqua.loan.amortization.dto.Loan;
 import paqua.loan.amortization.utils.factory.EarlyPaymentFactory;
@@ -36,7 +37,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EarlyPaymentRepeatingStrategyTest {
     @Test
@@ -69,6 +71,33 @@ class EarlyPaymentRepeatingStrategyTest {
                 loan.getEarlyPayments().get(0)
         );
 
-        assertEquals(repeated.size(), loan.getTerm());
+        assertEquals(loan.getTerm(), repeated.size());
+    }
+
+    @Test
+    void shouldRepeatToCertainMonth() {
+        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
+        Map<EarlyPaymentAdditionalParameters, String> parameters = new HashMap<>();
+        int monthNumber = 3;
+        parameters.put(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER, String.valueOf(monthNumber));
+
+        earlyPayments.put(0, new EarlyPayment(
+                BigDecimal.valueOf(100.00),
+                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
+                EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH,
+                parameters
+        ));
+
+        Loan loan = LoanFactory.getBuilderWithDefaultLoan()
+                .earlyPayments(earlyPayments)
+                .build();
+
+        Map<Integer, EarlyPayment> repeated = EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH.getRepeated(
+                loan,
+                0,
+                loan.getEarlyPayments().get(0)
+        );
+
+        assertEquals(monthNumber, repeated.size());
     }
 }
