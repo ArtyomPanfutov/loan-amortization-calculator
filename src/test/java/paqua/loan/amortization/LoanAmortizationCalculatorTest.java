@@ -236,7 +236,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithOneEarlyPaymentAndTermDecreasingStrategy() throws IOException {
+    void shouldCalculateWithOneEarlyPaymentAndTermDecreasingStrategy() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         earlyPayments.put(5, new EarlyPayment(
@@ -261,7 +261,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithOneEarlyPaymentAndPaymentAmountDecreasingStrategy() throws IOException {
+    void shouldCalculateWithOneEarlyPaymentAndPaymentAmountDecreasingStrategy() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         earlyPayments.put(5, new EarlyPayment(
@@ -286,7 +286,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    public void shouldCalculateWithAllKindsOfEarlyPayment() throws IOException {
+    void shouldCalculateWithAllKindsOfEarlyPayment() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         earlyPayments.put(0, new EarlyPayment(
