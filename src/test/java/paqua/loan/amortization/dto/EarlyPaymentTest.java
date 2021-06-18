@@ -44,7 +44,7 @@ class EarlyPaymentTest {
         String serialized = OBJECT_MAPPER.writeValueAsString(earlyPayment);
         EarlyPayment deserialized = OBJECT_MAPPER.readValue(serialized, EarlyPayment.class);
 
-        assertEquals(deserialized, earlyPayment);
-        assertEquals(deserialized.hashCode(), earlyPayment.hashCode());
+        assertEquals(earlyPayment, deserialized);
+        assertEquals(earlyPayment.hashCode(), deserialized.hashCode());
     }
 }

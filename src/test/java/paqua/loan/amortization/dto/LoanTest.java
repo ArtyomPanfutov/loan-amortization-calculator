@@ -43,8 +43,8 @@ class LoanTest {
         String serialized = OBJECT_MAPPER.writeValueAsString(loan);
         Loan deserialized = OBJECT_MAPPER.readValue(serialized, Loan.class);
 
-        assertEquals(deserialized, loan);
-        assertEquals(deserialized.hashCode(), loan.hashCode());
+        assertEquals(loan, deserialized);
+        assertEquals(loan.hashCode(), deserialized.hashCode());
     }
 
 	@Test
@@ -58,8 +58,8 @@ class LoanTest {
 				.term(10)
 				.build();
 
-		assertEquals(loan.getAmount(), BigDecimal.valueOf(amount));
-		assertEquals(loan.getRate(), BigDecimal.valueOf(rate));
+		assertEquals(BigDecimal.valueOf(amount), loan.getAmount());
+		assertEquals(BigDecimal.valueOf(rate), loan.getRate());
 	}
 
 }
