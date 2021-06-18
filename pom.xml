@@ -9,12 +9,16 @@
     <version>${revision}</version>
 
     <properties>
-        <revision>1.0.3</revision>
+        <revision>1.0.4</revision>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+
+    <scm>
+        <url>https://svn.apache.org/viewvc/maven</url>
+    </scm>
 
     <dependencies>
         <dependency>
@@ -73,12 +77,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub Artyom Panfutov Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/ArtyomPanfutov/loan-amortization-calculator</url>
-        </repository>
-    </distributionManagement>
 </project>
