@@ -38,7 +38,7 @@ class LoanTest {
 
     @Test
     void shouldMatchSerializedAndDeserializedObjects() throws JsonProcessingException {
-        Loan loan = LoanFactory.getDefaultWithEarlyPayments();
+        Loan loan = LoanFactory.createDefaultWithEarlyPayments();
 
         String serialized = OBJECT_MAPPER.writeValueAsString(loan);
         Loan deserialized = OBJECT_MAPPER.readValue(serialized, Loan.class);

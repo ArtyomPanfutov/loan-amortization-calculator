@@ -22,30 +22,25 @@
  * SOFTWARE.
  *
  */
-package paqua.loan.amortization.utils.factory;
+package paqua.loan.amortization.api.impl.repeating;
 
+import org.junit.jupiter.api.Test;
 import paqua.loan.amortization.dto.EarlyPayment;
-import paqua.loan.amortization.dto.Loan;
+import paqua.loan.amortization.utils.factory.EarlyPaymentFactory;
+import paqua.loan.amortization.utils.factory.LoanFactory;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
-public class LoanFactory {
-    /**
-     * Creates a loan with one early payment
-     */
-    public static Loan createDefaultWithEarlyPayments() {
-        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
-        earlyPayments.put(3, EarlyPaymentFactory.createSingleWithDecreasePaymentAmountStrategy(2330.4));
+import static org.junit.jupiter.api.Assertions.*;
 
-        return Loan.builder()
-                .amount(BigDecimal.valueOf(10000.00))
-                .rate(BigDecimal.valueOf(5.53))
-                .term(12)
-                .earlyPayments(earlyPayments)
-                .firstPaymentDate(LocalDate.now())
-                .build();
+class EarlyPaymentRepeatingStrategyTest {
+    @Test
+    void shouldNotRepeatForSingleStrategy() {
+        Map<Integer, EarlyPayment> repeated = EarlyPaymentRepeatingStrategy.SINGLE.getRepeated(
+                LoanFactory.createDefaultWithEarlyPayments(),
+                1,
+                EarlyPaymentFactory.createSingleWithDecreasePaymentAmountStrategy(100.00));
+
+        assertTrue(repeated.isEmpty());
     }
 }
