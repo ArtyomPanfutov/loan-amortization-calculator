@@ -16,6 +16,13 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/ArtyomPanfutov/loan-amortization-calculator/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <scm>
         <url>https://svn.apache.org/viewvc/maven</url>
     </scm>
