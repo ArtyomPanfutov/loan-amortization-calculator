@@ -59,8 +59,6 @@ public final class LoanAmortization implements Serializable {
      *
      * Key: number of payment in payment schedule (starts with 0)
      * Value: early payment data(amount, strategy)
-     *
-     * @return Early payments
      */
     private final Map<Integer, EarlyPayment> earlyPayments;
 
@@ -126,26 +124,51 @@ public final class LoanAmortization implements Serializable {
             this.earlyPayments = earlyPayments;
         }
 
+        /**
+         * Sets amount for a payment
+         *
+         * @param monthlyPaymentAmount amount for a payment
+         * @return loan amortization builder
+         */
         public LoanAmortizationBuilder monthlyPaymentAmount(BigDecimal monthlyPaymentAmount) {
             this.monthlyPaymentAmount = monthlyPaymentAmount;
             return this;
         }
 
+        /**
+         * Sets total amount of overpayment
+         * @param overPaymentAmount total amount of overpayment
+         * @return loan amortization builder
+         */
         public LoanAmortizationBuilder overPaymentAmount(BigDecimal overPaymentAmount) {
             this.overPaymentAmount = overPaymentAmount;
             return this;
         }
 
+        /**
+         * Sets payments of a loan
+         * @param monthlyPayments payments for a loan
+         * @return loan amortization builder
+         */
         public LoanAmortizationBuilder monthlyPayments(List<MonthlyPayment> monthlyPayments) {
             this.monthlyPayments = monthlyPayments;
             return this;
         }
 
+        /**
+         * Sets Early(additional, extra) payments
+         * @param earlyPayments additional payments
+         * @return
+         */
         public LoanAmortizationBuilder earlyPayments(Map<Integer, EarlyPayment> earlyPayments) {
             this.earlyPayments = earlyPayments;
             return this;
         }
 
+        /**
+         * Builder an immutable loan amortization object
+         * @return loan amortization
+         */
         public LoanAmortization build() {
             return new LoanAmortization(monthlyPaymentAmount, overPaymentAmount, monthlyPayments, earlyPayments);
         }

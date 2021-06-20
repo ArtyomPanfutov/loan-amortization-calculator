@@ -167,8 +167,8 @@ public final class Loan implements Serializable {
 		/**
 		 * Dept amount (principal) in double
 		 *
-		 * @param amount
-		 * @return
+		 * @param amount loan amount
+		 * @return amount
 		 */
 		public LoanBuilder amount(double amount) {
 			this.amount = BigDecimal.valueOf(amount);
@@ -188,8 +188,8 @@ public final class Loan implements Serializable {
 
 		/**
 		 * Interest rate in double
-		 * @param rate
-		 * @return
+		 * @param rate interest rate
+		 * @return loan builder
 		 */
 		public LoanBuilder rate(double rate) {
 			this.rate = BigDecimal.valueOf(rate);
@@ -207,11 +207,24 @@ public final class Loan implements Serializable {
             return this;
         }
 
+        /**
+         * Early payments
+         * @param earlyPayments early payments map where key is a number of the payment, value - an early payment
+         *
+         * @return loan builder
+         */
         public LoanBuilder earlyPayments(Map<Integer, EarlyPayment> earlyPayments) {
             this.earlyPayments = earlyPayments;
             return this;
         }
 
+        /**
+         * First payment date
+         *
+         * @param firstPaymentDate date of the first payment
+         *
+         * @return loan builder
+         */
         public LoanBuilder firstPaymentDate(LocalDate firstPaymentDate) {
             this.firstPaymentDate = firstPaymentDate;
             return this;
