@@ -29,6 +29,9 @@ import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 
 import java.io.Serializable;
 
+/**
+ * Parameters for an early payment
+ */
 public enum EarlyPaymentAdditionalParameters implements Serializable {
     /**
      *  Parameter for {@link EarlyPaymentRepeatingStrategy#TO_CERTAIN_MONTH}
