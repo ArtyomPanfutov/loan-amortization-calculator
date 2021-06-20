@@ -36,6 +36,8 @@ interface RepeatableEarlyPayment {
      * @param loan loan
      * @param startNumber the number of the early payment from which will be the first
      * @param earlyPayment source payment to copy
+     *
+     * @return early payments with applied repeating strategy
      */
     Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment);
 }

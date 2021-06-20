@@ -158,7 +158,7 @@ public final class LoanAmortization implements Serializable {
         /**
          * Sets Early(additional, extra) payments
          * @param earlyPayments additional payments
-         * @return
+         * @return loan amortization builder
          */
         public LoanAmortizationBuilder earlyPayments(Map<Integer, EarlyPayment> earlyPayments) {
             this.earlyPayments = earlyPayments;
