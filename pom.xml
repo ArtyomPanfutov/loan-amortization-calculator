@@ -4,7 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>paqua</groupId>
+    <name>Loan Amortization Calculator</name>
+    <description>This library is intended for loan payment schedule calculation.</description>
+    <url>https://github.com/ArtyomPanfutov/loan-amortization-calculator</url>
+
+    <groupId>io.github.ArtyomPanfutov</groupId>
     <artifactId>loan-amortization-calculator</artifactId>
     <version>${revision}</version>
 
@@ -23,7 +27,6 @@
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
         <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
     </properties>
-
     <licenses>
         <license>
             <name>MIT License</name>
@@ -34,7 +37,12 @@
     <scm>
         <url>https://github.com/ArtyomPanfutov/loan-amortization-calculator</url>
     </scm>
-
+    <developers>
+        <developer>
+            <name>Artyom Panfutov</name>
+            <email>artyom.cox@gmail.com</email>
+        </developer>
+    </developers>
     <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -69,7 +77,6 @@
             <version>${jackson.version}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -97,11 +104,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
-            </plugin>
-            <plugin>
+            </plugin>            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>${maven.source.plugin.version}</version>
