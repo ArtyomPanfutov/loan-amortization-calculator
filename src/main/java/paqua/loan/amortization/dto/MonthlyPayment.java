@@ -24,12 +24,6 @@
  */
 package paqua.loan.amortization.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -77,9 +71,6 @@ public final class MonthlyPayment implements Serializable {
     /**
      * Payment date (optional)
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     private final LocalDate paymentDate;
 
     @ConstructorProperties({"monthNumber", "loanBalanceAmount", "debtPaymentAmount", "interestPaymentAmount", "paymentAmount", "additionalPaymentAmount", "paymentDate"})
@@ -171,35 +162,80 @@ public final class MonthlyPayment implements Serializable {
             this.paymentDate = paymentDate;
         }
 
+        /**
+         * Sets a month number
+         * @param monthNumber month number
+         * @return monthly payment builder
+         */
         public MonthlyPaymentBuilder monthNumber(Integer monthNumber) {
             this.monthNumber = monthNumber;
             return this;
         }
+
+        /**
+         * Sets a remaing loan balance
+         * @param loanBalanceAmount amount of loan balance
+         * @return monthly payment builder
+         */
         public MonthlyPaymentBuilder loanBalanceAmount(BigDecimal loanBalanceAmount) {
             this.loanBalanceAmount = loanBalanceAmount;
             return this;
         }
+
+        /**
+         * Sets an amount of a remaining debt
+         * @param debtPaymentAmount debt payment amount
+         * @return monthly payment builder
+         */
         public MonthlyPaymentBuilder debtPaymentAmount(BigDecimal debtPaymentAmount) {
             this.debtPaymentAmount = debtPaymentAmount;
             return this;
         }
+
+        /**
+         * Sets an amount of interest in a payment
+         * @param interestPaymentAmount amount of interest in a payment
+         * @return monthly payment builder
+         */
         public MonthlyPaymentBuilder interestPaymentAmount(BigDecimal interestPaymentAmount) {
             this.interestPaymentAmount = interestPaymentAmount;
             return this;
         }
+
+        /**
+         * Sets a payment amount
+         * @param paymentAmount amount of a payment
+         * @return monthly payment builder
+         */
         public MonthlyPaymentBuilder paymentAmount(BigDecimal paymentAmount) {
             this.paymentAmount = paymentAmount;
             return this;
         }
+
+        /**
+         * Sets additional payment amount
+         * @param additionalPaymentAmount additional payment amount
+         * @return monthly payment builder
+         */
         public MonthlyPaymentBuilder additionalPaymentAmount(BigDecimal additionalPaymentAmount) {
             this.additionalPaymentAmount = additionalPaymentAmount;
             return this;
         }
+
+        /**
+         * Sets a payment date
+         * @param paymentDate date of the payment
+         * @return monthly payment builder
+         */
         public MonthlyPaymentBuilder paymentDate(LocalDate paymentDate) {
             this.paymentDate = paymentDate;
             return this;
         }
 
+        /**
+         * Builds an immutable monthly payment object
+         * @return monthly payment
+         */
         public MonthlyPayment build() {
             return new MonthlyPayment(monthNumber, loanBalanceAmount, debtPaymentAmount, interestPaymentAmount, paymentAmount, additionalPaymentAmount, paymentDate);
         }

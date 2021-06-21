@@ -24,12 +24,6 @@
  */
 package paqua.loan.amortization.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -72,7 +66,6 @@ public final class Loan implements Serializable {
     /**
      * First payment date (optional)
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate firstPaymentDate;
 
     @ConstructorProperties({"amount", "rate", "term", "earlyPayments", "firstPaymentDate"})
@@ -120,9 +113,6 @@ public final class Loan implements Serializable {
     /**
      * @return First payment date
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getFirstPaymentDate() {
         return firstPaymentDate;
     }
@@ -167,8 +157,8 @@ public final class Loan implements Serializable {
 		/**
 		 * Dept amount (principal) in double
 		 *
-		 * @param amount
-		 * @return
+		 * @param amount loan amount
+		 * @return amount
 		 */
 		public LoanBuilder amount(double amount) {
 			this.amount = BigDecimal.valueOf(amount);
@@ -188,8 +178,8 @@ public final class Loan implements Serializable {
 
 		/**
 		 * Interest rate in double
-		 * @param rate
-		 * @return
+		 * @param rate interest rate
+		 * @return loan builder
 		 */
 		public LoanBuilder rate(double rate) {
 			this.rate = BigDecimal.valueOf(rate);
@@ -207,11 +197,24 @@ public final class Loan implements Serializable {
             return this;
         }
 
+        /**
+         * Early payments
+         * @param earlyPayments early payments map where key is a number of the payment, value - an early payment
+         *
+         * @return loan builder
+         */
         public LoanBuilder earlyPayments(Map<Integer, EarlyPayment> earlyPayments) {
             this.earlyPayments = earlyPayments;
             return this;
         }
 
+        /**
+         * First payment date
+         *
+         * @param firstPaymentDate date of the first payment
+         *
+         * @return loan builder
+         */
         public LoanBuilder firstPaymentDate(LocalDate firstPaymentDate) {
             this.firstPaymentDate = firstPaymentDate;
             return this;
