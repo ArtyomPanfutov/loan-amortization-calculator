@@ -1,15 +1,29 @@
 ## Java library for calculating annual loan amortization schedule
 
 
-
+### Apache Maven
 ```xml
 <dependency>
-  <groupId>paqua</groupId>
+  <groupId>io.github.ArtyomPanfutov</groupId>
   <artifactId>loan-amortization-calculator</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.5</version>
 </dependency>
 ```
 
+### Gradle Groovy DSL
+```Groovy
+implementation 'io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.5'
+```
+
+### Gradle Kotlin DSL
+```Kotlin
+implementation("io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.5")
+```
+
+### Scala SBT
+```Scala
+libraryDependencies += "io.github.ArtyomPanfutov" % "loan-amortization-calculator" % "1.0.5"
+```
 
 Usage example:
 
