@@ -1,15 +1,29 @@
-## Java library for calculating annual loan amortization schedule
+# Java library for calculating annual loan amortization schedule
 
 
-
+### Apache Maven
 ```xml
 <dependency>
-  <groupId>paqua</groupId>
+  <groupId>io.github.ArtyomPanfutov</groupId>
   <artifactId>loan-amortization-calculator</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.5</version>
 </dependency>
 ```
 
+### Gradle Groovy DSL
+```Groovy
+implementation 'io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.5'
+```
+
+### Gradle Kotlin DSL
+```Kotlin
+implementation("io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.5")
+```
+
+### Scala SBT
+```Scala
+libraryDependencies += "io.github.ArtyomPanfutov" % "loan-amortization-calculator" % "1.0.5"
+```
 
 Usage example:
 
@@ -55,28 +69,6 @@ Usage example:
         LoanAmortizationCalculator calculator = new LoanAmortizationCalculatorImpl();
         LoanAmortization amortization = calculator.calculate(loan);
 
-```
-
-<b>The library is deployed only to the GitHub repository</b> https://maven.pkg.github.com/ArtyomPanfutov/loan-amortization-calculator. 
-
-Example of maven profile configuration:
-```xml
-  <profile>
-      <id>github</id>
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>https://repo1.maven.org/maven2</url>
-          <releases><enabled>true</enabled></releases>
-          <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub OWNER Apache Maven Packages</name>
-          <url>https://maven.pkg.github.com/ArtyomPanfutov/loan-amortization-calculator</url>
-        </repository>
-      </repositories>
-    </profile>
 ```
 
 ### Contribution to the project
