@@ -71,28 +71,6 @@ Usage example:
 
 ```
 
-<b>The library is deployed only to the GitHub repository</b> https://maven.pkg.github.com/ArtyomPanfutov/loan-amortization-calculator. 
-
-Example of maven profile configuration:
-```xml
-  <profile>
-      <id>github</id>
-      <repositories>
-        <repository>
-          <id>central</id>
-          <url>https://repo1.maven.org/maven2</url>
-          <releases><enabled>true</enabled></releases>
-          <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-        <repository>
-          <id>github</id>
-          <name>GitHub OWNER Apache Maven Packages</name>
-          <url>https://maven.pkg.github.com/ArtyomPanfutov/loan-amortization-calculator</url>
-        </repository>
-      </repositories>
-    </profile>
-```
-
 ### Contribution to the project
 If you want to contribute - see [CONTRIBUTING.md](CONTRIBUTING.md)
 
