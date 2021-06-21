@@ -24,7 +24,6 @@
  */
 package paqua.loan.amortization.api.impl.repeating;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import paqua.loan.amortization.dto.EarlyPayment;
@@ -45,7 +44,6 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     /**
      * Single payment, without repeating
      */
-    @JsonProperty("single")
     SINGLE {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
@@ -59,7 +57,6 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     /**
      * Repeats early payment for each payment in the payment schedule to the end of the loan term
      */
-    @JsonProperty("to_end")
     TO_END {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {
@@ -78,7 +75,6 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     /**
      * Repeats early payment to the specified month number
      */
-    @JsonProperty("to_certain_month")
     TO_CERTAIN_MONTH {
         @Override
         public Map<Integer, EarlyPayment> getRepeated(final Loan loan, final int startNumber, final EarlyPayment earlyPayment) {

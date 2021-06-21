@@ -24,12 +24,6 @@
  */
 package paqua.loan.amortization.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -72,7 +66,6 @@ public final class Loan implements Serializable {
     /**
      * First payment date (optional)
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate firstPaymentDate;
 
     @ConstructorProperties({"amount", "rate", "term", "earlyPayments", "firstPaymentDate"})
@@ -120,9 +113,6 @@ public final class Loan implements Serializable {
     /**
      * @return First payment date
      */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     public LocalDate getFirstPaymentDate() {
         return firstPaymentDate;
     }
