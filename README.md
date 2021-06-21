@@ -1,4 +1,4 @@
-## Java library for calculating annual loan amortization schedule
+# Java library for calculating annual loan amortization schedule
 
 
 ### Apache Maven
