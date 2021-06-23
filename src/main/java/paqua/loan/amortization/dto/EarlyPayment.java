@@ -94,6 +94,42 @@ public class EarlyPayment implements Serializable {
         return additionalParameters;
     }
 
+    /**
+     * Early payment builder
+     */
+    public static final class EarlyPaymentBuilder {
+        private BigDecimal amount;
+        private EarlyPaymentStrategy strategy;
+        private EarlyPaymentRepeatingStrategy repeatingStrategy;
+        private Map<EarlyPaymentAdditionalParameters, String> additionalParameters;
+
+        public EarlyPaymentBuilder() {
+        }
+
+        /**
+         * Builds an immutable early payment
+         * @return early poyment
+         */
+        public EarlyPayment build() {
+            return new EarlyPayment(
+                    amount,
+                    strategy,
+                    repeatingStrategy,
+                    additionalParameters
+            );
+        }
+
+        @Override
+        public String toString() {
+            return "EarlyPaymentBuilder{" +
+                    "amount=" + amount +
+                    ", strategy=" + strategy +
+                    ", repeatingStrategy=" + repeatingStrategy +
+                    ", additionalParameters=" + additionalParameters +
+                    '}';
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
