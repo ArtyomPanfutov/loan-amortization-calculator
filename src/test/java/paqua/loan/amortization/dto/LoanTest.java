@@ -25,9 +25,12 @@
 package paqua.loan.amortization.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import paqua.loan.amortization.utils.factory.LoanFactory;
 import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 
@@ -60,6 +63,28 @@ class LoanTest {
 
 		assertEquals(BigDecimal.valueOf(amount), loan.getAmount());
 		assertEquals(BigDecimal.valueOf(rate), loan.getRate());
+	}
+
+	@Test
+	void shouldBuildWithOneEarlyPayment() {
+		Loan loan = Loan.builder()
+				.amount(BigDecimal.valueOf(500000.32))    // Loan debt
+				.rate(BigDecimal.valueOf(4.56))           // Interest rate
+				.term(10)                                 // Loan term in MONTHS
+				.earlyPayment(3, EarlyPayment.builder()
+					.amount(3500.00)
+					.strategy(EarlyPaymentStrategy.DECREASE_TERM)
+					.repeatingStrategy(EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH)
+					.repeatTo(7)
+					.build())
+                .earlyPayment(8, EarlyPayment.builder()
+					.amount(50000.00)
+					.strategy(EarlyPaymentStrategy.DECREASE_TERM)
+					.repeatingStrategy(EarlyPaymentRepeatingStrategy.SINGLE)
+					.build())
+				.build();
+
+		assertEquals(2, loan.getEarlyPayments().size());
 	}
 
 }
