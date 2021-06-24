@@ -29,6 +29,7 @@ import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -66,6 +67,9 @@ public class EarlyPayment implements Serializable {
         this.additionalParameters = additionalParameters;
     }
 
+    public static EarlyPaymentBuilder builder() {
+        return new EarlyPaymentBuilder();
+    }
     /**
      * @return Amount of early payment
      */
@@ -104,6 +108,51 @@ public class EarlyPayment implements Serializable {
         private Map<EarlyPaymentAdditionalParameters, String> additionalParameters;
 
         public EarlyPaymentBuilder() {
+        }
+
+        /**
+         * Sets early payment amount
+         * @param amount amount of the payment
+         * @return early payment builder
+         */
+        public EarlyPaymentBuilder amount(BigDecimal amount) {
+            this.amount = amount;
+            return this;
+        }
+
+        /**
+         * Sets early payment amount
+         * @param amount amount of the payment
+         * @return early payment builder
+         */
+        public EarlyPaymentBuilder amount(double amount) {
+            this.amount = BigDecimal.valueOf(amount);
+            return this;
+        }
+
+        /**
+         * Sets early payment strategy
+         * @param strategy strategy for the early payment
+         * @return early payment builder
+         */
+        public EarlyPaymentBuilder strategy(EarlyPaymentStrategy strategy) {
+            this.strategy = strategy;
+            return this;
+        }
+
+        /**
+         * Sets additional parameter - a number which defines till which the early payment will be repeated
+         * @param number payment number in the schedule
+         * @return early payment builder
+         */
+        public EarlyPaymentBuilder repeatTo(int number) {
+            if (additionalParameters == null) {
+                additionalParameters = new HashMap<>();
+            }
+
+            additionalParameters.put(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER, String.valueOf(number));
+
+            return this;
         }
 
         /**
