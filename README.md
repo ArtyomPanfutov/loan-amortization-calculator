@@ -30,9 +30,9 @@ Usage example:
 1. A Regular loan without any additional payments
 ```java
         Loan loan = Loan.builder()
-                .amount(BigDecimal.valueOf(500000.32)) // Debt amount
-                .rate(BigDecimal.valueOf(4.56))        // Interest rate
-                .term(32)                              // Loan term in MONTHS
+                .amount(500000.39) // Debt amount
+                .rate(4.56)        // Interest rate
+                .term(32)          // Loan term in MONTHS
                 .build();
                 
         LoanAmortizationCalculator calculator = new LoanAmortizationCalculatorImpl();
@@ -42,28 +42,21 @@ Usage example:
 2. A loan with different kinds of addtitional payments 
 ```java
 
-        // Key - payment number in a loan amortization schedule(starts with 0)
-        // Value - additional payment attributes
-        Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
-        
-        earlyPayments.put(3, new EarlyPayment(
-                BigDecimal.valueOf(30000),                // Amount of additional payment
-                EarlyPaymentStrategy.DECREASE_TERM,       // Strategy of this additional payment that would be applied to the loan
-                EarlyPaymentRepeatingStrategy.SINGLE,     // Repeating strategy for this addtional payment 
-                null                                      // Additional parameteres (optional)
-        ));   
-        earlyPayments.put(5, new EarlyPayment(
-                BigDecimal.valueOf(50000),
-                EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT,
-                EarlyPaymentRepeatingStrategy.SINGLE,
-                null
-        ));
-
         Loan loan = Loan.builder()
                 .amount(BigDecimal.valueOf(500000.32))    // Loan debt
                 .rate(BigDecimal.valueOf(4.56))           // Interest rate
-                .earlyPayments(earlyPayments)             // Additional payments
                 .term(10)                                 // Loan term in MONTHS
+                .earlyPayment(3, EarlyPayment.builder()
+                    .amount(3500.00)
+                    .strategy(EarlyPaymentStrategy.DECREASE_TERM)
+                    .repeatingStrategy(EarlyPaymentRepeatingStrategy.TO_CERTAIN_MONTH)  
+                    .repeatTo(7)
+                    .build())
+                .earlyPayment(8, EarlyPayment.builder()
+                    .amount(50000.00)
+                    .strategy(EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT)
+                    .repeatingStrategy(EarlyPaymentRepeatingStrategy.SINGLE)
+                    .build())
                 .build();
                 
         LoanAmortizationCalculator calculator = new LoanAmortizationCalculatorImpl();
