@@ -141,6 +141,16 @@ public class EarlyPayment implements Serializable {
         }
 
         /**
+         * Sets repeating strategy
+         * @param repeatingStrategy repeating strategy for this payment
+         * @return early payment builder
+         */
+        public EarlyPaymentBuilder repeatingStrategy(EarlyPaymentRepeatingStrategy repeatingStrategy) {
+            this.repeatingStrategy = repeatingStrategy;
+            return this;
+        }
+
+        /**
          * Sets additional parameter - a number which defines till which the early payment will be repeated
          * @param number payment number in the schedule
          * @return early payment builder

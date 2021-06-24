@@ -27,6 +27,7 @@ package paqua.loan.amortization.dto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import paqua.loan.amortization.utils.factory.EarlyPaymentFactory;
 import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 
@@ -55,15 +56,18 @@ class EarlyPaymentTest {
         BigDecimal amount = BigDecimal.valueOf(1000000.22);
         int repeatTo = 12;
         EarlyPaymentStrategy strategy = EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT;
+        EarlyPaymentRepeatingStrategy repeatingStrategy = EarlyPaymentRepeatingStrategy.TO_END;
 
         EarlyPayment earlyPayment = EarlyPayment.builder()
                 .amount(amount)
                 .repeatTo(repeatTo)
+                .repeatingStrategy(repeatingStrategy)
                 .strategy(strategy)
                 .build();
 
         assertEquals(amount, earlyPayment.getAmount());
         assertEquals(strategy, earlyPayment.getStrategy());
+        assertEquals(repeatingStrategy, earlyPayment.getRepeatingStrategy());
         assertEquals(String.valueOf(repeatTo), earlyPayment.getAdditionalParameters().get(EarlyPaymentAdditionalParameters.REPEAT_TO_MONTH_NUMBER));
     }
 }
