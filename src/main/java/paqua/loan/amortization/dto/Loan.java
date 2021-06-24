@@ -28,6 +28,7 @@ import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -144,7 +145,7 @@ public final class Loan implements Serializable {
         }
 
         /**
-         * Dept amount (principal) in BigDecimal
+         * Sets dept amount (principal) in BigDecimal
          *
          * @param amount loan amount
          * @return loan builder
@@ -155,7 +156,7 @@ public final class Loan implements Serializable {
         }
 
 		/**
-		 * Dept amount (principal) in double
+		 * Sets dept amount (principal) in double
 		 *
 		 * @param amount loan amount
 		 * @return amount
@@ -166,7 +167,7 @@ public final class Loan implements Serializable {
 		}
 
 		/**
-         * Interest rate
+         * Sets interest rate
          *
          * @param rate interest rate in BigDecimal
          * @return loan builder
@@ -177,7 +178,7 @@ public final class Loan implements Serializable {
         }
 
 		/**
-		 * Interest rate in double
+		 * Sets interest rate in double
 		 * @param rate interest rate
 		 * @return loan builder
 		 */
@@ -187,7 +188,7 @@ public final class Loan implements Serializable {
 		}
 
         /**
-         * Loan term in months
+         * Sets loan term in months
          *
          * @param term (months)
          * @return loan builder
@@ -198,7 +199,7 @@ public final class Loan implements Serializable {
         }
 
         /**
-         * Early payments
+         * Sets early payment map
          * @param earlyPayments early payments map where key is a number of the payment, value - an early payment
          *
          * @return loan builder
@@ -209,7 +210,22 @@ public final class Loan implements Serializable {
         }
 
         /**
-         * First payment date
+         * Adds one early payment to the early payments map
+         * @param number number of the payment
+         * @param earlyPayment early payment
+         * @return loan builder
+         */
+        public LoanBuilder earlyPayment(int number, EarlyPayment earlyPayment) {
+            if (this.earlyPayments == null) {
+                this.earlyPayments = new HashMap<>();
+            }
+
+            this.earlyPayments.put(number, earlyPayment);
+            return this;
+        }
+
+        /**
+         * Sets first payment date
          *
          * @param firstPaymentDate date of the first payment
          *

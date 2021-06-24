@@ -25,6 +25,8 @@
 package paqua.loan.amortization.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -60,6 +62,22 @@ class LoanTest {
 
 		assertEquals(BigDecimal.valueOf(amount), loan.getAmount());
 		assertEquals(BigDecimal.valueOf(rate), loan.getRate());
+	}
+
+	@Test
+	void shouldBuildWithOneEarlyPayment() {
+		Loan loan = Loan.builder()
+				.firstPaymentDate(LocalDate.of(2036, 10, 21))
+				.term(10)
+				.rate(10.32)
+				.earlyPayment(1, EarlyPayment.builder()
+						.amount(10982.34)
+						.strategy(EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT)
+						.repeatTo(10)
+						.build())
+				.build();
+
+		assertEquals(1, loan.getEarlyPayments().size());
 	}
 
 }
