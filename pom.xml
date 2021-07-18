@@ -26,7 +26,7 @@
         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
         <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
-        <zerocode.version>1.3.7</zerocode.version>
+        <zerocode.version>1.3.8</zerocode.version>
     </properties>
     <licenses>
         <license>
@@ -77,6 +77,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsmart</groupId>
+            <artifactId>zerocode-tdd</artifactId>
+            <version>${zerocode.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
