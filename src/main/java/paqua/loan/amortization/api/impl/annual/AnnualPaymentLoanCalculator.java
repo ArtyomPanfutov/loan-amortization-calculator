@@ -24,9 +24,9 @@
  */
 package paqua.loan.amortization.api.impl.annual;
 
-import paqua.loan.amortization.api.LoanAmortizationCalculator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import paqua.loan.amortization.api.LoanAmortizationCalculator;
 import paqua.loan.amortization.dto.*;
 
 import java.math.BigDecimal;
@@ -43,7 +43,7 @@ import java.util.Map;
  *
  * @author Artyom Panfutov
  */
-public class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
+class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
     private static final Logger LOGGER = LogManager.getLogger(AnnualPaymentLoanCalculator.class);
 
     @Override

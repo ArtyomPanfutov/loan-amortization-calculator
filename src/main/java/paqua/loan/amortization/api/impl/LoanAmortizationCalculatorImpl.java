@@ -25,7 +25,7 @@
 package paqua.loan.amortization.api.impl;
 
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
-import paqua.loan.amortization.api.impl.annual.AnnualPaymentLoanCalculator;
+import paqua.loan.amortization.api.impl.annual.AnnualPaymentLoanCalculatorFactory;
 import paqua.loan.amortization.api.impl.message.Messages;
 import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import paqua.loan.amortization.exception.ExceptionType;
@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  */
 class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
     private static final Logger LOGGER = LogManager.getLogger(LoanAmortizationCalculatorImpl.class);
-    private static final LoanAmortizationCalculator ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR = new AnnualPaymentLoanCalculator();
+    private static final LoanAmortizationCalculator ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR = AnnualPaymentLoanCalculatorFactory.create();
 
     /**
      * Calculates annual loan amortization schedule
