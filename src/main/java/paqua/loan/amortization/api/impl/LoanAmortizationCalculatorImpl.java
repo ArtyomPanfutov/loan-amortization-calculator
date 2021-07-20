@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  *
  * @author Artyom Panfutov
  */
-public class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
+class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
     private static final Logger LOGGER = LogManager.getLogger(LoanAmortizationCalculatorImpl.class);
     private static final LoanAmortizationCalculator ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR = new AnnualPaymentLoanCalculator();
 
