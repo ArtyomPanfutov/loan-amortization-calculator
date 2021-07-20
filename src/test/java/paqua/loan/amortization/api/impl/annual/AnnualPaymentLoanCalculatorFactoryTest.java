@@ -22,26 +22,19 @@
  * SOFTWARE.
  *
  */
-package paqua.loan.amortization.api.impl;
+package paqua.loan.amortization.api.impl.annual;
 
+import org.junit.jupiter.api.Test;
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
 
-/**
- * Represents the factory for the loan calculator implementation
- * The goal is to encapsulate the actual implementation and public only the interface
- *
- * @author Artyom Panfutov
- */
-public final class LoanAmortizationCalculatorFactory {
-    private LoanAmortizationCalculatorFactory() {
-        throw new IllegalStateException("Instantiation is not allowed");
-    }
+import static org.junit.jupiter.api.Assertions.*;
 
-    /**
-     * Creates a new instance of {@link LoanAmortizationCalculatorImpl}
-     * @return {@link LoanAmortizationCalculatorImpl}
-     */
-    public static LoanAmortizationCalculator create() {
-        return new LoanAmortizationCalculatorImpl();
+class AnnualPaymentLoanCalculatorFactoryTest {
+    @Test
+    void shouldCreateAnInstanceOfAnnualPaymentLoanCalculator() {
+        LoanAmortizationCalculator calculator = AnnualPaymentLoanCalculatorFactory.create();
+
+        assertNotNull(calculator);
+        assertTrue(calculator instanceof AnnualPaymentLoanCalculator);
     }
 }

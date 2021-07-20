@@ -22,26 +22,26 @@
  * SOFTWARE.
  *
  */
-package paqua.loan.amortization.api.impl;
+package paqua.loan.amortization.api.impl.annual;
 
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
 
 /**
- * Represents the factory for the loan calculator implementation
- * The goal is to encapsulate the actual implementation and public only the interface
+ * Represents a factory for annual payment loan calculator
  *
  * @author Artyom Panfutov
  */
-public final class LoanAmortizationCalculatorFactory {
-    private LoanAmortizationCalculatorFactory() {
-        throw new IllegalStateException("Instantiation is not allowed");
-    }
+public final class AnnualPaymentLoanCalculatorFactory {
 
     /**
-     * Creates a new instance of {@link LoanAmortizationCalculatorImpl}
-     * @return {@link LoanAmortizationCalculatorImpl}
+     * Creates a new instance of annual payment loan calculator
+     * @return {@link AnnualPaymentLoanCalculator}
      */
     public static LoanAmortizationCalculator create() {
-        return new LoanAmortizationCalculatorImpl();
+        return new AnnualPaymentLoanCalculator();
+    }
+
+    private AnnualPaymentLoanCalculatorFactory() {
+        throw new IllegalStateException("Instantiation is not allowed");
     }
 }
