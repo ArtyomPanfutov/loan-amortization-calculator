@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
-import paqua.loan.amortization.api.impl.LoanAmortizationCalculatorImpl;
+import paqua.loan.amortization.api.impl.LoanAmortizationCalculatorFactory;
 import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import paqua.loan.amortization.dto.*;
 import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
@@ -36,7 +36,6 @@ import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -58,7 +57,7 @@ class LoanAmortizationCalculatorTest {
 
     @BeforeEach
     public void initTarget() {
-        calculator = new LoanAmortizationCalculatorImpl();
+        calculator = LoanAmortizationCalculatorFactory.create();
     }
 
     @Test
@@ -88,7 +87,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    void shouldCalculateWithFirstPaymentDate() throws IOException, ParseException {
+    void shouldCalculateWithFirstPaymentDate() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         Loan loan = Loan.builder()
@@ -108,7 +107,7 @@ class LoanAmortizationCalculatorTest {
     }
 
     @Test
-    void shouldCalculateWhenFirstPaymentDateIsLastDayInMonth() throws IOException, ParseException {
+    void shouldCalculateWhenFirstPaymentDateIsLastDayInMonth() throws IOException {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
 
         Loan loan = Loan.builder()
