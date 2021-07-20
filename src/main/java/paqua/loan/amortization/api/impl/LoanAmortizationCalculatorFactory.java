@@ -32,9 +32,9 @@ import paqua.loan.amortization.api.LoanAmortizationCalculator;
  *
  * @author Artyom Panfutov
  */
-public class LoanAmortizationCalculatorFactory {
+public final class LoanAmortizationCalculatorFactory {
     private LoanAmortizationCalculatorFactory() {
-
+        throw new IllegalStateException("Instantiation is not allowed");
     }
 
     /**
