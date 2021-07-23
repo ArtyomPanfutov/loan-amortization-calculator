@@ -6,23 +6,23 @@
 <dependency>
   <groupId>io.github.ArtyomPanfutov</groupId>
   <artifactId>loan-amortization-calculator</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7</version>
 </dependency>
 ```
 
 ### Gradle Groovy DSL
 ```Groovy
-implementation 'io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.6'
+implementation 'io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.7'
 ```
 
 ### Gradle Kotlin DSL
 ```Kotlin
-implementation("io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.6")
+implementation("io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.7")
 ```
 
 ### Scala SBT
 ```Scala
-libraryDependencies += "io.github.ArtyomPanfutov" % "loan-amortization-calculator" % "1.0.6"
+libraryDependencies += "io.github.ArtyomPanfutov" % "loan-amortization-calculator" % "1.0.7"
 ```
 
 Usage example:
@@ -35,7 +35,7 @@ Usage example:
                 .term(32)          // Loan term in MONTHS
                 .build();
                 
-        LoanAmortizationCalculator calculator = new LoanAmortizationCalculatorImpl();
+        LoanAmortizationCalculator calculator = LoanAmortizationCalculatorFactory.create();
         LoanAmortization amortization = calculator.calculate(loan);
 
 ```
@@ -58,8 +58,8 @@ Usage example:
                     .repeatingStrategy(EarlyPaymentRepeatingStrategy.SINGLE)
                     .build())
                 .build();
-                
-        LoanAmortizationCalculator calculator = new LoanAmortizationCalculatorImpl();
+
+        LoanAmortizationCalculator calculator = LoanAmortizationCalculatorFactory.create();
         LoanAmortization amortization = calculator.calculate(loan);
 
 ```
