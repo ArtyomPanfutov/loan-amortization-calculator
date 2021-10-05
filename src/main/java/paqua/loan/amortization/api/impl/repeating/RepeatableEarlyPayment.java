@@ -31,11 +31,11 @@ import java.util.Map;
 
 interface RepeatableEarlyPayment {
     /**
-     * Copies early payment
+     * Copies an early payment
      *
      * @param loan loan
-     * @param startNumber the number of the early payment from which will be the first
-     * @param earlyPayment source payment to copy
+     * @param startNumber the number of an early payment from which to start copy
+     * @param earlyPayment an early payment to copy
      *
      * @return early payments with applied repeating strategy
      */

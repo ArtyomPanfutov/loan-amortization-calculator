@@ -46,16 +46,19 @@ import java.util.Map;
 class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
     private static final Logger LOGGER = LogManager.getLogger(AnnualPaymentLoanCalculator.class);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public LoanAmortization calculate(Loan loan) {
         BigDecimal overPaidInterestAmount = BigDecimal.ZERO;
 
-        Map<Integer, EarlyPayment> earlyPayments = loan.getEarlyPayments() != null ? loan.getEarlyPayments() : Collections.emptyMap();
+        final Map<Integer, EarlyPayment> earlyPayments = loan.getEarlyPayments() != null ? loan.getEarlyPayments() : Collections.emptyMap();
         BigDecimal loanBalance = loan.getAmount();
 
-        int term = loan.getTerm();
+        final int term = loan.getTerm();
 
-        BigDecimal monthlyInterestRate = getMonthlyInterestRate(loan.getRate());
+        final BigDecimal monthlyInterestRate = getMonthlyInterestRate(loan.getRate());
         BigDecimal monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, term);
 
         LoanAmortization.LoanAmortizationBuilder amortizationBuilder = LoanAmortization.builder()
@@ -70,14 +73,14 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
             BigDecimal paymentAmount;
             BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
 
-            BigDecimal interestAmount = calculateInterestAmount(loan, loanBalance, monthlyInterestRate, paymentDate);
+            final BigDecimal interestAmount = calculateInterestAmount(loan, loanBalance, monthlyInterestRate, paymentDate);
 
             // If something gets negative for some reason (because of early payments) we stop calculating and correct the amount in the last payment
             if (interestAmount.compareTo(BigDecimal.ZERO) < 0 || loanBalance.compareTo(BigDecimal.ZERO) < 0) {
-                int lastPaymentNumber = i - 1;
+                final int lastPaymentNumber = i - 1;
 
                 if (lastPaymentNumber >= 0) {
-                    MonthlyPayment lastPayment = payments.get(lastPaymentNumber);
+                    final MonthlyPayment lastPayment = payments.get(lastPaymentNumber);
 
                     payments.set(lastPaymentNumber, new MonthlyPayment.MonthlyPaymentBuilder()
                             .monthNumber(lastPayment.getMonthNumber())
@@ -142,17 +145,17 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
                 .earlyPayments(earlyPayments)
                 .build();
 
-        LOGGER.info("Calculation result: {}", result);
+        LOGGER.debug("Calculation result: {}", result);
 
         return result;
     }
 
     private BigDecimal getMonthlyInterestRate(BigDecimal rate) {
-        BigDecimal monthlyInterestRate = rate
+        final BigDecimal monthlyInterestRate = rate
                 .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
                 .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
 
-        LOGGER.info("Calculated monthly interest rate: {}", monthlyInterestRate);
+        LOGGER.debug("Calculated monthly interest rate: {}", monthlyInterestRate);
         return monthlyInterestRate;
     }
 
@@ -170,7 +173,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
         try {
             paymentDate = nextMonth.withDayOfMonth(firstPaymentDate.getDayOfMonth());
         } catch (DateTimeException e) {
-            LOGGER.trace("Cannot construct next payment date with the requested day of month. The last month day will be used instead.");
+            LOGGER.info("Cannot construct next payment date with the requested day of month. The last month day will be used instead.");
             paymentDate = nextMonth.withDayOfMonth(nextMonth.lengthOfMonth());
         }
         return paymentDate;
