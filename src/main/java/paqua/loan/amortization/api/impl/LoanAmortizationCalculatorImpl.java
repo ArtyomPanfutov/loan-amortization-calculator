@@ -43,7 +43,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Implementation of loan amortization calculator
+ * The implementation of loan amortization calculator
  *
  * Calculates annual amortization schedule
  *
@@ -93,7 +93,7 @@ class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
                     );
         }
 
-        LOGGER.info("After applying repeating strategy: {} ", allEarlyPayments);
+        LOGGER.debug("After applying repeating strategy: {} ", allEarlyPayments);
         return Loan.builder()
                 .amount(loan.getAmount())
                 .earlyPayments(allEarlyPayments)
@@ -104,37 +104,47 @@ class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
     }
 
     private void validate(Loan loan) {
-        LOGGER.info("Validating input. Loan:{} ", loan);
+        LOGGER.debug("Validating input. Loan:{} ", loan);
 
         if (loan == null || loan.getAmount() == null || loan.getRate() == null || loan.getTerm() == null) {
-            throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.NULL.getMessageText());
+            throw new LoanAmortizationCalculatorException(
+                    ExceptionType.INPUT_VERIFICATION_EXCEPTION,
+                    Messages.NULL.getMessageText());
         }
 
         if (loan.getAmount().compareTo(BigDecimal.ZERO) <= 0 || loan.getTerm() <= 0 || loan.getRate().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.NEGATIVE_NUMBER.getMessageText());
+            throw new LoanAmortizationCalculatorException(
+                    ExceptionType.INPUT_VERIFICATION_EXCEPTION,
+                    Messages.NEGATIVE_NUMBER.getMessageText());
         }
 
-        // Early payments
         if (loan.getEarlyPayments() != null) {
             for (Map.Entry<Integer, EarlyPayment> entry :loan.getEarlyPayments().entrySet()) {
                 if (entry.getKey() == null || entry.getValue() == null) {
-                    throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.NULL.getMessageText());
+                    throw new LoanAmortizationCalculatorException(
+                            ExceptionType.INPUT_VERIFICATION_EXCEPTION,
+                            Messages.NULL.getMessageText());
                 }
 
                 if (entry.getKey() < 0) {
-                   throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.EARLY_PAYMENT_NUMBER_IS_NEGATIVE.getMessageText());
+                   throw new LoanAmortizationCalculatorException(
+                           ExceptionType.INPUT_VERIFICATION_EXCEPTION,
+                           Messages.EARLY_PAYMENT_NUMBER_IS_NEGATIVE.getMessageText());
                 }
 
                 if (entry.getValue().getAmount().compareTo(BigDecimal.ZERO) < 0) {
-                    throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.EARLY_PAYMENT_AMOUNT_IS_NEGATIVE.getMessageText());
+                    throw new LoanAmortizationCalculatorException(
+                            ExceptionType.INPUT_VERIFICATION_EXCEPTION,
+                            Messages.EARLY_PAYMENT_AMOUNT_IS_NEGATIVE.getMessageText());
                 }
 
                 if (entry.getValue().getStrategy() == null) {
-                    throw new LoanAmortizationCalculatorException(ExceptionType.INPUT_VERIFICATION_EXCEPTION, Messages.EARLY_PAYMENT_STRATEGY_IS_NULL.getMessageText());
+                    throw new LoanAmortizationCalculatorException(
+                            ExceptionType.INPUT_VERIFICATION_EXCEPTION,
+                            Messages.EARLY_PAYMENT_STRATEGY_IS_NULL.getMessageText());
                 }
             }
         }
-        LOGGER.info("Successful validation!");
     }
 
 

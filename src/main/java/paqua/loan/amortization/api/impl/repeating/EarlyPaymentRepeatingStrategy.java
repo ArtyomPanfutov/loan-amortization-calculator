@@ -93,11 +93,11 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
     private static final Logger LOGGER = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
 
     /**
-     * Copies early payment withing this range
+     * Copies an early payment within this range
      *
      * @param earlyPayment source payment to copy
-     * @param fromPayment number of the payment from which to start copying
-     * @param toPayment number of the payment to stop copying
+     * @param fromPayment number of the payment from which to start copying (left boundary, inclusive)
+     * @param toPayment number of the payment to stop copying (right boundary, exclusive)
      */
     Map<Integer, EarlyPayment> repeat(EarlyPayment earlyPayment, int fromPayment, int toPayment) {
         Map<Integer, EarlyPayment> earlyPayments = new HashMap<>();
@@ -107,14 +107,13 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
                     earlyPayment.getAmount(),
                     earlyPayment.getStrategy(),
                     EarlyPaymentRepeatingStrategy.SINGLE,
-                    null
-            ));
+                    null));
         }
 
         return earlyPayments;
     }
 
     void log(EarlyPayment earlyPayment, EarlyPaymentRepeatingStrategy strategy) {
-        LOGGER.info("Repeating strategy {} \n Repeating the payment: {} ",  strategy, earlyPayment);
+        LOGGER.debug("Repeating strategy {} \n Repeating the payment: {} ",  strategy, earlyPayment);
     }
 }
