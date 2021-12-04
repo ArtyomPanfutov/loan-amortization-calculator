@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * This class represent input attributes of loan
@@ -50,11 +51,12 @@ public final class Loan implements Serializable {
      */
     private final BigDecimal rate;
 
+    private final Function<BigDecimal, BigDecimal> interestRateCalculator;
+
     /**
      * Loan term in months
      */
     private final Integer term;
-
 
     /**
      * Early payments (or additional payments)
@@ -73,6 +75,17 @@ public final class Loan implements Serializable {
     public Loan(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
         this.amount = amount;
         this.rate = rate;
+        this.interestRateCalculator = r -> r;
+        this.term = term;
+        this.earlyPayments = earlyPayments;
+        this.firstPaymentDate = firstPaymentDate;
+    }
+
+    @ConstructorProperties({"amount", "rate", "interestRateCalculator", "term", "earlyPayments", "firstPaymentDate"})
+    public Loan(BigDecimal amount, BigDecimal rate, Function<BigDecimal, BigDecimal> interestRateCalculator, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
+        this.amount = amount;
+        this.rate = rate;
+        this.interestRateCalculator = interestRateCalculator == null ? r -> r : interestRateCalculator;
         this.term = term;
         this.earlyPayments = earlyPayments;
         this.firstPaymentDate = firstPaymentDate;
@@ -129,6 +142,7 @@ public final class Loan implements Serializable {
 
         private BigDecimal amount;
         private BigDecimal rate;
+        private Function<BigDecimal, BigDecimal> interestRateCalculator;
         private Integer term;
         private Map<Integer, EarlyPayment> earlyPayments;
         private LocalDate firstPaymentDate;
@@ -136,9 +150,10 @@ public final class Loan implements Serializable {
         public LoanBuilder() {
         }
 
-        public LoanBuilder(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
+        public LoanBuilder(BigDecimal amount, BigDecimal rate, Function<BigDecimal, BigDecimal> interestRateCalculator, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
             this.amount = amount;
             this.rate = rate;
+            this.interestRateCalculator = interestRateCalculator;
             this.term = term;
             this.earlyPayments = earlyPayments;
             this.firstPaymentDate = firstPaymentDate;
@@ -186,6 +201,14 @@ public final class Loan implements Serializable {
 			this.rate = BigDecimal.valueOf(rate);
 			return this;
 		}
+
+        /**
+         * TODO
+         */
+        public LoanBuilder interestRateCalculator(Function<BigDecimal, BigDecimal> calculator) {
+            this.interestRateCalculator = calculator;
+            return this;
+        }
 
         /**
          * Sets loan term in months
@@ -237,7 +260,7 @@ public final class Loan implements Serializable {
         }
 
         public Loan build() {
-            return new Loan(amount, rate, term, earlyPayments, firstPaymentDate);
+            return new Loan(amount, rate, interestRateCalculator, term, earlyPayments, firstPaymentDate);
         }
     }
 
@@ -250,12 +273,13 @@ public final class Loan implements Serializable {
                 Objects.equals(rate, loan.rate) &&
                 Objects.equals(term, loan.term) &&
                 Objects.equals(firstPaymentDate, loan.firstPaymentDate) &&
-                Objects.equals(earlyPayments, loan.earlyPayments);
+                Objects.equals(earlyPayments, loan.earlyPayments) &&
+                Objects.equals(interestRateCalculator, loan.interestRateCalculator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount, rate, term, firstPaymentDate, earlyPayments);
+        return Objects.hash(amount, rate, interestRateCalculator, term, firstPaymentDate, earlyPayments);
     }
 
     @Override
