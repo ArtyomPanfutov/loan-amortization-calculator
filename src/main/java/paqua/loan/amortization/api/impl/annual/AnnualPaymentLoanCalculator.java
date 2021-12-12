@@ -58,7 +58,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
 
         final int term = loan.getTerm();
 
-        final BigDecimal monthlyInterestRate = getMonthlyInterestRate(loan.getRate());
+        final BigDecimal monthlyInterestRate = calculateMonthlyInterestRate(loan.getRate());
         BigDecimal monthlyPaymentAmount = getMonthlyPaymentAmount(loanBalance, monthlyInterestRate, term);
 
         LoanAmortization.LoanAmortizationBuilder amortizationBuilder = LoanAmortization.builder()
@@ -68,21 +68,24 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
 
         // Calculate amortization schedule
         List<MonthlyPayment> payments = new ArrayList<>();
-        for (int i = 0; i < term; i++) {
+        for (int paymentNumber = 0; paymentNumber < term; paymentNumber++) {
             BigDecimal principalAmount;
             BigDecimal paymentAmount;
             BigDecimal additionalPaymentAmount = BigDecimal.ZERO;
 
-            final BigDecimal interestAmount = calculateInterestAmount(loan, loanBalance, monthlyInterestRate, paymentDate);
+            final BigDecimal currentInterestRate = loan.getMonthlyInterestRateProvider() != null
+                    ? calculateCustomInterestRate(loan, paymentNumber) : monthlyInterestRate;
+
+            final BigDecimal interestAmount = calculateInterestAmount(loan, loanBalance, currentInterestRate, paymentDate);
 
             // If something gets negative for some reason (because of early payments) we stop calculating and correct the amount in the last payment
             if (interestAmount.compareTo(BigDecimal.ZERO) < 0 || loanBalance.compareTo(BigDecimal.ZERO) < 0) {
-                final int lastPaymentNumber = i - 1;
+                final int lastPaymentNumber = paymentNumber - 1;
 
                 if (lastPaymentNumber >= 0) {
                     final MonthlyPayment lastPayment = payments.get(lastPaymentNumber);
 
-                    payments.set(lastPaymentNumber, new MonthlyPayment.MonthlyPaymentBuilder()
+                    payments.set(lastPaymentNumber, MonthlyPayment.builder()
                             .monthNumber(lastPayment.getMonthNumber())
                             .additionalPaymentAmount(lastPayment.getAdditionalPaymentAmount())
                             .paymentAmount(lastPayment.getLoanBalanceAmount()
@@ -99,12 +102,12 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
 
             overPaidInterestAmount = overPaidInterestAmount.add(interestAmount);
 
-            EarlyPayment earlyPayment = earlyPayments.get(i);
+            EarlyPayment earlyPayment = earlyPayments.get(paymentNumber);
             if (earlyPayment != null) {
                 additionalPaymentAmount = earlyPayment.getAmount();
             }
 
-            if (i + 1 == loan.getTerm()) {
+            if (paymentNumber + 1 == loan.getTerm()) {
                 principalAmount = loanBalance;
             } else {
                 principalAmount = (monthlyPaymentAmount.subtract(interestAmount))
@@ -119,7 +122,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
                     .debtPaymentAmount(principalAmount)
                     .paymentAmount(paymentAmount)
                     .loanBalanceAmount(loanBalance)
-                    .monthNumber(i)
+                    .monthNumber(paymentNumber)
                     .additionalPaymentAmount(additionalPaymentAmount)
                     .paymentDate(paymentDate)
                     .build());
@@ -127,10 +130,10 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
             loanBalance = loanBalance.subtract(principalAmount);
 
             if (earlyPayment != null && earlyPayment.getStrategy() == EarlyPaymentStrategy.DECREASE_MONTHLY_PAYMENT) {
-                BigDecimal additionalPaymentsWithRemainingLoanBalance = getTotalAmountOfEarlyPaymentsWithLoanBalanceUntilPayment(loan, loanBalance, i);
+                BigDecimal additionalPaymentsWithRemainingLoanBalance = getTotalAmountOfEarlyPaymentsWithLoanBalanceUntilPayment(loan, loanBalance, paymentNumber);
 
-                if (term - 1 - i > 0) {
-                    monthlyPaymentAmount = getMonthlyPaymentAmount(additionalPaymentsWithRemainingLoanBalance, monthlyInterestRate, term - 1 - i);
+                if (term - 1 - paymentNumber > 0) {
+                    monthlyPaymentAmount = getMonthlyPaymentAmount(additionalPaymentsWithRemainingLoanBalance, currentInterestRate, term - 1 - paymentNumber);
                 }
             }
 
@@ -150,7 +153,21 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
         return result;
     }
 
-    private BigDecimal getMonthlyInterestRate(BigDecimal rate) {
+    private BigDecimal calculateCustomInterestRate(Loan loan, int currentPayment) {
+        final BigDecimal customInterestRate = loan.getMonthlyInterestRateProvider()
+                .apply(new MonthlyInterestRateInputImpl(currentPayment));
+
+        LOGGER.debug("Custom interest rate for a payment number {} is {}", currentPayment, customInterestRate);
+
+        return customInterestRate;
+    }
+
+    private BigDecimal calculateMonthlyInterestRate(BigDecimal rate) {
+        if (rate == null) {
+            // Could be null if custom implementation for interest rate calculation is provided
+            return null;
+        }
+
         final BigDecimal monthlyInterestRate = rate
                 .divide(BigDecimal.valueOf(100), 15, RoundingMode.HALF_UP)
                 .divide(BigDecimal.valueOf(12), 15, RoundingMode.HALF_UP);
@@ -168,7 +185,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
      * @return next payment date
      */
     private LocalDate getNextMonthPaymentDate(LocalDate firstPaymentDate, LocalDate paymentDate) {
-        LocalDate nextMonth = paymentDate.plusMonths(1);
+        final LocalDate nextMonth = paymentDate.plusMonths(1);
 
         try {
             paymentDate = nextMonth.withDayOfMonth(firstPaymentDate.getDayOfMonth());
@@ -220,6 +237,10 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
     private BigDecimal getMonthlyPaymentAmount(BigDecimal amount, BigDecimal rate, Integer term) {
         LOGGER.info("Calculating monthly payment amount for: {}, {}, {}", amount, rate, term);
 
+        if (rate == null) {
+            return null;
+        }
+
         BigDecimal monthlyPaymentAmount = getInterestAmountByBalanceAndMonthlyInterestRate(
                 amount,
                 (rate.multiply(BigDecimal.ONE.add(rate).pow(term)))
@@ -227,6 +248,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
         );
 
         LOGGER.info("Calculate monthly payment amount: {}", amount);
+
         return monthlyPaymentAmount;
     }
 

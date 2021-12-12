@@ -24,7 +24,7 @@
  */
 package paqua.loan.amortization.dto;
 
-import paqua.loan.amortization.api.impl.interestrate.InterestRateInput;
+import paqua.loan.amortization.api.impl.annual.MonthlyInterestRateInput;
 
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
@@ -53,7 +53,7 @@ public final class Loan implements Serializable {
      */
     private final BigDecimal rate;
 
-    private final Function<InterestRateInput, BigDecimal> interestRateCalculator;
+    private final Function<MonthlyInterestRateInput, BigDecimal> monthlyInterestRateProvider;
 
     /**
      * Loan term in months
@@ -77,17 +77,17 @@ public final class Loan implements Serializable {
     public Loan(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
         this.amount = amount;
         this.rate = rate;
-        this.interestRateCalculator = null;
+        this.monthlyInterestRateProvider = null;
         this.term = term;
         this.earlyPayments = earlyPayments;
         this.firstPaymentDate = firstPaymentDate;
     }
 
-    @ConstructorProperties({"amount", "rate", "interestRateCalculator", "term", "earlyPayments", "firstPaymentDate"})
-    public Loan(BigDecimal amount, BigDecimal rate, Function<InterestRateInput, BigDecimal> interestRateCalculator, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
+    @ConstructorProperties({"amount", "rate", "monthlyInterestRateProvider", "term", "earlyPayments", "firstPaymentDate"})
+    public Loan(BigDecimal amount, BigDecimal rate, Function<MonthlyInterestRateInput, BigDecimal> monthlyInterestRateProvider, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
         this.amount = amount;
         this.rate = rate;
-        this.interestRateCalculator = interestRateCalculator;
+        this.monthlyInterestRateProvider = monthlyInterestRateProvider;
         this.term = term;
         this.earlyPayments = earlyPayments;
         this.firstPaymentDate = firstPaymentDate;
@@ -133,6 +133,10 @@ public final class Loan implements Serializable {
         return firstPaymentDate;
     }
 
+    public Function<MonthlyInterestRateInput, BigDecimal> getMonthlyInterestRateProvider() {
+        return monthlyInterestRateProvider;
+    }
+
     public static LoanBuilder builder() {
         return new LoanBuilder();
     }
@@ -144,7 +148,7 @@ public final class Loan implements Serializable {
 
         private BigDecimal amount;
         private BigDecimal rate;
-        private Function<InterestRateInput, BigDecimal> interestRateCalculator;
+        private Function<MonthlyInterestRateInput, BigDecimal> monthlyInterestRateProvider;
         private Integer term;
         private Map<Integer, EarlyPayment> earlyPayments;
         private LocalDate firstPaymentDate;
@@ -152,10 +156,10 @@ public final class Loan implements Serializable {
         public LoanBuilder() {
         }
 
-        public LoanBuilder(BigDecimal amount, BigDecimal rate, Function<InterestRateInput, BigDecimal> interestRateCalculator, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
+        public LoanBuilder(BigDecimal amount, BigDecimal rate, Function<MonthlyInterestRateInput, BigDecimal> monthlyInterestRateProvider, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
             this.amount = amount;
             this.rate = rate;
-            this.interestRateCalculator = interestRateCalculator;
+            this.monthlyInterestRateProvider = monthlyInterestRateProvider;
             this.term = term;
             this.earlyPayments = earlyPayments;
             this.firstPaymentDate = firstPaymentDate;
@@ -207,8 +211,8 @@ public final class Loan implements Serializable {
         /**
          * TODO
          */
-        public LoanBuilder interestRateCalculator(Function<InterestRateInput, BigDecimal> calculator) {
-            this.interestRateCalculator = calculator;
+        public LoanBuilder monthlyInterestRateProvider(Function<MonthlyInterestRateInput, BigDecimal> provider) {
+            this.monthlyInterestRateProvider = provider;
             return this;
         }
 
@@ -262,7 +266,7 @@ public final class Loan implements Serializable {
         }
 
         public Loan build() {
-            return new Loan(amount, rate, interestRateCalculator, term, earlyPayments, firstPaymentDate);
+            return new Loan(amount, rate, monthlyInterestRateProvider, term, earlyPayments, firstPaymentDate);
         }
     }
 
@@ -276,12 +280,12 @@ public final class Loan implements Serializable {
                 Objects.equals(term, loan.term) &&
                 Objects.equals(firstPaymentDate, loan.firstPaymentDate) &&
                 Objects.equals(earlyPayments, loan.earlyPayments) &&
-                Objects.equals(interestRateCalculator, loan.interestRateCalculator);
+                Objects.equals(monthlyInterestRateProvider, loan.monthlyInterestRateProvider);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amount, rate, interestRateCalculator, term, firstPaymentDate, earlyPayments);
+        return Objects.hash(amount, rate, monthlyInterestRateProvider, term, firstPaymentDate, earlyPayments);
     }
 
     @Override
