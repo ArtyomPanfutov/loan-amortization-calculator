@@ -6,23 +6,23 @@
 <dependency>
   <groupId>io.github.ArtyomPanfutov</groupId>
   <artifactId>loan-amortization-calculator</artifactId>
-  <version>1.0.7</version>
+  <version>1.0.8</version>
 </dependency>
 ```
 
 ### Gradle Groovy DSL
 ```Groovy
-implementation 'io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.7'
+implementation 'io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.8'
 ```
 
 ### Gradle Kotlin DSL
 ```Kotlin
-implementation("io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.7")
+implementation("io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.8")
 ```
 
 ### Scala SBT
 ```Scala
-libraryDependencies += "io.github.ArtyomPanfutov" % "loan-amortization-calculator" % "1.0.7"
+libraryDependencies += "io.github.ArtyomPanfutov" % "loan-amortization-calculator" % "1.0.8"
 ```
 
 Usage example:
