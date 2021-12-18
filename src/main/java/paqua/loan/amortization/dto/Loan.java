@@ -75,15 +75,14 @@ public final class Loan implements Serializable {
 
     @ConstructorProperties({"amount", "rate", "term", "earlyPayments", "firstPaymentDate"})
     public Loan(BigDecimal amount, BigDecimal rate, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
-        this.amount = amount;
-        this.rate = rate;
-        this.monthlyInterestRateProvider = null;
-        this.term = term;
-        this.earlyPayments = earlyPayments;
-        this.firstPaymentDate = firstPaymentDate;
+        this(amount,
+            rate,
+            null,
+            term,
+            earlyPayments,
+            firstPaymentDate);
     }
 
-    @ConstructorProperties({"amount", "rate", "monthlyInterestRateProvider", "term", "earlyPayments", "firstPaymentDate"})
     public Loan(BigDecimal amount, BigDecimal rate, Function<MonthlyInterestRateInput, BigDecimal> monthlyInterestRateProvider, Integer term, Map<Integer, EarlyPayment> earlyPayments, LocalDate firstPaymentDate) {
         this.amount = amount;
         this.rate = rate;
