@@ -53,6 +53,14 @@ public final class Loan implements Serializable {
      */
     private final BigDecimal rate;
 
+    /**
+     * Implementation for a monthly interest rate provider
+     * Optional parameter
+     *
+     * This function will be called from the calculator implementation for every monthly payment
+     * The input of this function consists of additional data that is needed for a calculation, e.g. payment number
+     * The output of this function must be an interest rate for the requested month
+     */
     private final Function<MonthlyInterestRateInput, BigDecimal> monthlyInterestRateProvider;
 
     /**
@@ -208,7 +216,12 @@ public final class Loan implements Serializable {
 		}
 
         /**
-         * TODO
+         * Implementation for a monthly interest rate provider
+         * Optional parameter
+         *
+         * This function will be called from the calculator implementation for every monthly payment
+         * The input of this function consists of additional data that is needed for a calculation, e.g. payment number
+         * The output of this function must be an interest rate for the requested month
          */
         public LoanBuilder monthlyInterestRateProvider(Function<MonthlyInterestRateInput, BigDecimal> provider) {
             this.monthlyInterestRateProvider = provider;
