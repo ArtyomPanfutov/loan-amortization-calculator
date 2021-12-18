@@ -38,7 +38,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -329,5 +331,28 @@ class LoanAmortizationCalculatorTest {
         LoanAmortization reference = OBJECT_MAPPER.readValue(new File("src/test/resources/reference-different-early-payments-500000.32-4.56-32.json"), LoanAmortization.class);
 
         assertEquals(reference, amortization);
+    }
+
+    @Test
+    void shouldUseCustomInterestRate() {
+        final List<BigDecimal> rates = Arrays.asList(
+                BigDecimal.valueOf(0.0036),
+                BigDecimal.valueOf(0.0031),
+                BigDecimal.valueOf(0.0031),
+                BigDecimal.valueOf(0.0053),
+                BigDecimal.valueOf(0.0022));
+
+        final Loan loan = Loan.builder()
+                .amount(BigDecimal.valueOf(500000.32))
+                .term(5)
+                .monthlyInterestRateProvider(input -> rates.get(input.getPaymentNumber()))
+                .build();
+
+        LoanAmortization amortization = calculator.calculate(loan);
+        assertNotNull(amortization);
+
+        for (MonthlyPayment payment : amortization.getMonthlyPayments()) {
+            assertEquals(rates.get(payment.getMonthNumber()), payment.getInterestRate());
+        }
     }
 }

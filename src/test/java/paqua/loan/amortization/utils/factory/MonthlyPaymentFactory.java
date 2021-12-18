@@ -40,6 +40,7 @@ public class MonthlyPaymentFactory {
                 .additionalPaymentAmount(BigDecimal.valueOf(2340.33))
                 .debtPaymentAmount(debtPaymentAmount)
                 .interestPaymentAmount(interestPaymentAmount)
+                .interestRate(BigDecimal.valueOf(15.5))
                 .paymentAmount(debtPaymentAmount.add(interestPaymentAmount))
                 .loanBalanceAmount(BigDecimal.valueOf(99545433.12))
                 .build();

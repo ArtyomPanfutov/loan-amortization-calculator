@@ -78,6 +78,10 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
 
             final BigDecimal interestAmount = calculateInterestAmount(loan, loanBalance, currentInterestRate, paymentDate);
 
+            monthlyPaymentAmount = monthlyPaymentAmount == null  // Could be null if variable interest rate is used
+                    ? getMonthlyPaymentAmount(loanBalance, currentInterestRate, term)
+                    : monthlyPaymentAmount;
+
             // If something gets negative for some reason (because of early payments) we stop calculating and correct the amount in the last payment
             if (interestAmount.compareTo(BigDecimal.ZERO) < 0 || loanBalance.compareTo(BigDecimal.ZERO) < 0) {
                 final int lastPaymentNumber = paymentNumber - 1;
@@ -92,6 +96,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
                                     .add(lastPayment.getInterestPaymentAmount()))
                             .debtPaymentAmount(lastPayment.getLoanBalanceAmount())
                             .interestPaymentAmount(lastPayment.getInterestPaymentAmount())
+                            .interestRate(currentInterestRate)
                             .paymentDate(paymentDate)
                             .loanBalanceAmount(lastPayment.getLoanBalanceAmount())
                             .build());
@@ -119,6 +124,7 @@ class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
 
             payments.add(MonthlyPayment.builder()
                     .interestPaymentAmount(interestAmount)
+                    .interestRate(currentInterestRate)
                     .debtPaymentAmount(principalAmount)
                     .paymentAmount(paymentAmount)
                     .loanBalanceAmount(loanBalance)

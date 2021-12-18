@@ -98,6 +98,7 @@ class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
                 .amount(loan.getAmount())
                 .earlyPayments(allEarlyPayments)
                 .rate(loan.getRate())
+                .monthlyInterestRateProvider(loan.getMonthlyInterestRateProvider())
                 .term(loan.getTerm())
                 .firstPaymentDate(loan.getFirstPaymentDate())
                 .build();
@@ -106,13 +107,17 @@ class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
     private void validate(Loan loan) {
         LOGGER.debug("Validating input. Loan:{} ", loan);
 
-        if (loan == null || loan.getAmount() == null || loan.getRate() == null || loan.getTerm() == null) {
+        if (loan == null || loan.getAmount() == null
+                || (loan.getRate() == null && loan.getMonthlyInterestRateProvider() == null)
+                || loan.getTerm() == null) {
             throw new LoanAmortizationCalculatorException(
                     ExceptionType.INPUT_VERIFICATION_EXCEPTION,
                     Messages.NULL.getMessageText());
         }
 
-        if (loan.getAmount().compareTo(BigDecimal.ZERO) <= 0 || loan.getTerm() <= 0 || loan.getRate().compareTo(BigDecimal.ZERO) <= 0) {
+        if (loan.getAmount().compareTo(BigDecimal.ZERO) <= 0
+                || loan.getTerm() <= 0
+                || (loan.getRate() != null && loan.getRate().compareTo(BigDecimal.ZERO) <= 0)) {
             throw new LoanAmortizationCalculatorException(
                     ExceptionType.INPUT_VERIFICATION_EXCEPTION,
                     Messages.NEGATIVE_NUMBER.getMessageText());
