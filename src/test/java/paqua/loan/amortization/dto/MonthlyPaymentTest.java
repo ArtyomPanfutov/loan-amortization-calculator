@@ -32,7 +32,7 @@ import paqua.loan.amortization.utils.factory.ObjectMapperFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MonthlyInterestRateInputTest {
+class MonthlyPaymentTest {
     private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.create();
 
     @Test

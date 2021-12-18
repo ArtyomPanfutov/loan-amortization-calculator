@@ -216,7 +216,7 @@ public final class Loan implements Serializable {
 		}
 
         /**
-         * Implementation for a monthly interest rate provider
+         * Sets an implementation for a monthly interest rate provider
          * Optional parameter
          *
          * This function will be called from the calculator implementation for every monthly payment
