@@ -24,8 +24,8 @@
  */
 package paqua.loan.amortization.api.impl.repeating;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import paqua.loan.amortization.dto.EarlyPayment;
 import paqua.loan.amortization.dto.EarlyPaymentAdditionalParameters;
 import paqua.loan.amortization.dto.Loan;
@@ -90,7 +90,7 @@ public enum EarlyPaymentRepeatingStrategy implements RepeatableEarlyPayment {
         }
     };
 
-    private static final Logger LOGGER = LogManager.getLogger(EarlyPaymentRepeatingStrategy.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EarlyPaymentRepeatingStrategy.class);
 
     /**
      * Copies an early payment within this range

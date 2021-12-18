@@ -24,14 +24,14 @@
  */
 package paqua.loan.amortization.api.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
 import paqua.loan.amortization.api.impl.annual.AnnualPaymentLoanCalculatorFactory;
 import paqua.loan.amortization.api.impl.message.Messages;
 import paqua.loan.amortization.api.impl.repeating.EarlyPaymentRepeatingStrategy;
 import paqua.loan.amortization.exception.ExceptionType;
 import paqua.loan.amortization.exception.LoanAmortizationCalculatorException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import paqua.loan.amortization.dto.EarlyPayment;
 import paqua.loan.amortization.dto.Loan;
 import paqua.loan.amortization.dto.LoanAmortization;
@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  * @author Artyom Panfutov
  */
 class LoanAmortizationCalculatorImpl implements LoanAmortizationCalculator {
-    private static final Logger LOGGER = LogManager.getLogger(LoanAmortizationCalculatorImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoanAmortizationCalculatorImpl.class);
     private static final LoanAmortizationCalculator ANNUAL_PAYMENT_LOAN_AMORTIZATION_CALCULATOR = AnnualPaymentLoanCalculatorFactory.create();
 
     /**

@@ -24,8 +24,8 @@
  */
 package paqua.loan.amortization.api.impl.annual;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import paqua.loan.amortization.api.LoanAmortizationCalculator;
 import paqua.loan.amortization.dto.*;
 
@@ -44,7 +44,7 @@ import java.util.Map;
  * @author Artyom Panfutov
  */
 class AnnualPaymentLoanCalculator implements LoanAmortizationCalculator {
-    private static final Logger LOGGER = LogManager.getLogger(AnnualPaymentLoanCalculator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnnualPaymentLoanCalculator.class);
 
     /**
      * {@inheritDoc}
