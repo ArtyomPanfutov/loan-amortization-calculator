@@ -64,6 +64,9 @@ Usage example:
 
 ```
 
+### About calculation strategies 
+If you pass ```firstPaymentDate``` parameter then the calculatioin strategy for interests will be _**actual/actual**_. That means the actual number of days in a month and in a year will be used to get accrued interest. Therefore, you will get different interest value with provided ```firstPaymentDate```.
+
 ### Contribution to the project
 If you want to contribute - see [CONTRIBUTING.md](CONTRIBUTING.md)
 
