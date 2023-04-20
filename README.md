@@ -1,7 +1,17 @@
-# Java library for calculating annual loan amortization schedule
+# Loan amortization calculator
+This is a light-weight library that allows calculating annual loan amortization schedule with a capability of setting early (additional) payments. </br>
+The calculation is implemented is in this library without using any extra heavy transitive dependencies.
 
+It is written in Java, thus can be used in any language that have interop with Java.
 
-### Apache Maven
+## How to use?
+### Native image
+If you want to try it in a serverless container there is a project that provides a native image of a service that is a wrapper for this library. It has one HTTP endpoint for calculating loan amortization.
+</br> 
+You can find it [here](https://github.com/ArtyomPanfutov/loan-amortization-calculator-service).
+### Dependency from Maven Central Repository
+Add one of the following the dependencies depending on what package manager you use.
+#### Apache Maven
 ```xml
 <dependency>
   <groupId>io.github.ArtyomPanfutov</groupId>
@@ -10,22 +20,23 @@
 </dependency>
 ```
 
-### Gradle Groovy DSL
+#### Gradle Groovy DSL
 ```Groovy
 implementation 'io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.9'
 ```
 
-### Gradle Kotlin DSL
+#### Gradle Kotlin DSL
 ```Kotlin
 implementation("io.github.ArtyomPanfutov:loan-amortization-calculator:1.0.9")
 ```
 
-### Scala SBT
+#### Scala SBT
 ```Scala
 libraryDependencies += "io.github.ArtyomPanfutov" % "loan-amortization-calculator" % "1.0.9"
 ```
 
-Usage example:
+### Usage example:
+See the following example of source code to understand the API of the library.
 
 1. A Regular loan without any additional payments
 ```java
