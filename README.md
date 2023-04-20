@@ -75,6 +75,8 @@ See the following example of source code to understand the API of the library.
 
 ```
 
+Note, that the loan amortization calculator object can be as a singleton since it has no shared state. 
+
 ### Early payments
 Early payments or additional payments to a monthly payment can be passed in the map of early payments in loan object.</br>
 
